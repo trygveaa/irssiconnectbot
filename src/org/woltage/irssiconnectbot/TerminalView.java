@@ -89,14 +89,14 @@ public class TerminalView extends View implements FontSizeChangedListener {
 		 * transform to our character width and height
 		 */
 		// TODO make this into a resource somehow
-		shiftCursor = new Path();
-		shiftCursor.lineTo(0.5f, 0.33f);
-		shiftCursor.lineTo(1.0f, 0.0f);
-
 		altCursor = new Path();
-		altCursor.moveTo(0.0f, 1.0f);
-		altCursor.lineTo(0.5f, 0.66f);
-		altCursor.lineTo(1.0f, 1.0f);
+		altCursor.lineTo(0.5f, 0.33f);
+		altCursor.lineTo(1.0f, 0.0f);
+
+		shiftCursor = new Path();
+		shiftCursor.moveTo(0.0f, 1.0f);
+		shiftCursor.lineTo(0.5f, 0.66f);
+		shiftCursor.lineTo(1.0f, 1.0f);
 
 		ctrlCursor = new Path();
 		ctrlCursor.moveTo(0.0f, 0.25f);
