@@ -29,10 +29,10 @@ import org.woltage.irssiconnectbot.service.PromptHelper;
 import org.woltage.irssiconnectbot.service.TerminalBridge;
 import org.woltage.irssiconnectbot.service.TerminalKeyListener;
 import org.woltage.irssiconnectbot.service.TerminalManager;
+import org.woltage.irssiconnectbot.util.InstallMosh;
 import org.woltage.irssiconnectbot.util.PreferenceConstants;
 import org.woltage.irssiconnectbot.util.PubkeyDatabase;
 import org.woltage.irssiconnectbot.util.PubkeyUtils;
-import org.woltage.irssiconnectbot.util.InstallMosh;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -945,8 +945,15 @@ public class ConsoleActivity extends Activity {
         unbindService(connection);
     }
 
+    protected void shiftCurrentTerminalOrIrssiWindow(final int direction, boolean upperScreenHalf) {
+        if (upperScreenHalf || prefs.getString("swipe", "").equals("default")) {
+            shiftCurrentTerminal(direction);
+        } else {
+            shiftIrssiWindow(direction);
+        }
+    }
+
     protected void shiftCurrentTerminal(final int direction) {
-         if(prefs.getString("swipe", "").equals("default")) {
             View overlay;
             synchronized (flip) {
                 boolean shouldAnimate = flip.getChildCount() > 1;
@@ -980,7 +987,9 @@ public class ConsoleActivity extends Activity {
 
                 updatePromptVisible();
             }
-        } else {
+    }
+
+    protected void shiftIrssiWindow(final int direction) {
             int keyCode = 0;
             View flip = findCurrentView(R.id.console_flip);
             if(flip == null) return;
@@ -1006,7 +1015,7 @@ public class ConsoleActivity extends Activity {
                 ((vt320)terminal.bridge.buffer).write(0x10);
             }
             terminal.bridge.tryKeyVibrate();
-        }
+            terminal.bridge.tryScrollVibrate();
     }
 
     /**

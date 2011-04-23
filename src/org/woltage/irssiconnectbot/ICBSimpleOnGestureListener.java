@@ -45,13 +45,15 @@ class ICBSimpleOnGestureListener extends GestureDetector.SimpleOnGestureListener
 		// console change
 		// make sure user kept a steady hand horizontally
 		if (Math.abs(disty) < (consoleActivity.flip.getHeight() / 4)) {
+			// check wether the gesture occured in the upper or lower half of the screen
+			boolean upperScreenHalf = e2.getY() < consoleActivity.flip.getHeight() / 2;
 			if (distx > goalwidth) {
-				consoleActivity.shiftCurrentTerminal(ConsoleActivity.SHIFT_RIGHT);
+				consoleActivity.shiftCurrentTerminalOrIrssiWindow(ConsoleActivity.SHIFT_RIGHT, upperScreenHalf);
 				return true;
 			}
 
 			if (distx < -goalwidth) {
-				consoleActivity.shiftCurrentTerminal(ConsoleActivity.SHIFT_LEFT);
+				consoleActivity.shiftCurrentTerminalOrIrssiWindow(ConsoleActivity.SHIFT_LEFT, upperScreenHalf);
 				return true;
 			}
 
