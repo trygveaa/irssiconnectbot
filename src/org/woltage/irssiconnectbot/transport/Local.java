@@ -90,7 +90,11 @@ public class Local extends AbsTransport {
 		int[] pids = new int[1];
 
 		try {
-			shellFd = Exec.createSubprocess("/system/bin/sh", "-", null, pids);
+			if (new java.io.File("/system/xbin/bash").exists()) {
+				shellFd = Exec.createSubprocess("/system/xbin/bash", "-", null, pids);
+			} else {
+				shellFd = Exec.createSubprocess("/system/bin/sh", "-", null, pids);
+			}
 		} catch (Exception e) {
 			bridge.outputLine(manager.res.getString(R.string.local_shell_unavailable));
 			Log.e(TAG, "Cannot start local shell", e);
