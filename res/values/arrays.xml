@@ -31,14 +31,16 @@
 		<item>@string/list_rotation_default</item>
 		<item>@string/list_rotation_land</item>
 		<item>@string/list_rotation_port</item>
-		<item>@string/list_rotation_auto</item>
+		<item>@string/list_rotation_sensor</item>
+		<item>@string/list_rotation_system</item>
 	</string-array>
 
 	<string-array name="list_rotation_values" translatable="false">
 		<item>Default</item>
 		<item>Force landscape</item>
 		<item>Force portrait</item>
-		<item>Automatic</item>
+		<item>Sensor</item>
+		<item>Automatic (System)</item>
 	</string-array>
 
 	<string-array name="list_camera" translatable="false">

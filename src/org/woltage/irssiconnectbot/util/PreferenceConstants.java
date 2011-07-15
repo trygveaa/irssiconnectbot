@@ -46,7 +46,8 @@ public class PreferenceConstants {
 	public static final String ROTATION_DEFAULT = "Default";
 	public static final String ROTATION_LANDSCAPE = "Force landscape";
 	public static final String ROTATION_PORTRAIT = "Force portrait";
-	public static final String ROTATION_AUTOMATIC = "Automatic";
+	public static final String ROTATION_SENSOR = "Sensor";
+	public static final String ROTATION_SYSTEM = "Automatic (System)";
 
 	public static final String FULLSCREEN = "fullscreen";
 

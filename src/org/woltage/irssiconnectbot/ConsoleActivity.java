@@ -505,6 +505,9 @@ public class ConsoleActivity extends Activity {
         } else if (PreferenceConstants.ROTATION_PORTRAIT.equals(rotate)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             forcedOrientation = true;
+        } else if (PreferenceConstants.ROTATION_SENSOR.equals(rotate)) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+            forcedOrientation = false;
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             forcedOrientation = false;

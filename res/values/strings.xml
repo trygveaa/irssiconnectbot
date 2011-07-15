@@ -392,7 +392,8 @@
 	<string name="list_rotation_land">"Force landscape"</string>
 	<string name="list_rotation_port">"Force portrait"</string>
 	<!-- Selection to indicate the rotation should be selected automatically based on the tilt sensor. -->
-	<string name="list_rotation_auto">"Automatic"</string>
+	<string name="list_rotation_sensor">"Sensor"</string>
+	<string name="list_rotation_system">"Automatic (System)"</string>
 
 	<!-- Selection to indicate pressing the Camera button should send "Ctrl+A then Space". -->
 	<string name="list_camera_ctrlaspace">"Ctrl+A then Space"</string>
