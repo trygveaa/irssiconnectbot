@@ -709,7 +709,6 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 		final String[] whereArgs = new String[] { String.valueOf(scheme), String.valueOf(number) };
 
 		if (value == Colors.defaults[number]) {
-
 			synchronized (dbLock) {
 				db = getWritableDatabase();
 
