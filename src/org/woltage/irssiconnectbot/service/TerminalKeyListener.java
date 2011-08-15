@@ -380,6 +380,12 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                         bridge.transport.write(0x09);
                     } else if(prefs.getString("searchbutton", "urlscan").equals("meta")) {
                         sendEscape();
+                    } else if(prefs.getString("searchbutton", "urlscan").equals("hardmeta_softurlscan")) {
+                        if ((event.getFlags() & KeyEvent.FLAG_VIRTUAL_HARD_KEY) == 0) { // hardware key
+                            sendEscape();
+                        } else { // softkey
+                            urlScan(v);
+                        }
                     } else {
                         urlScan(v);
                     }

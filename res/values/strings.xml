@@ -526,6 +526,7 @@
     <string name="list_searchbutton_meta">META (alt)</string>
     <string name="list_searchbutton_tab">TAB</string>
     <string name="list_searchbutton_urlscan">URL Scan</string>
+    <string name="list_searchbutton_hardmeta_softurlscan">Hard: META / Soft: URL Scan</string>
 
 	<!-- Long press menu -->
 	<string name="pref_longpressmenu_title">Long press menu</string>

@@ -157,12 +157,14 @@
   		<item>@string/list_searchbutton_meta</item>
   		<item>@string/list_searchbutton_tab</item>
   		<item>@string/list_searchbutton_urlscan</item>
+  		<item>@string/list_searchbutton_hardmeta_softurlscan</item>
   	</string-array>
 
     <string-array name="list_searchbutton_values">
         <item>meta</item>
         <item>tab</item>
         <item>urlscan</item>
+        <item>hardmeta_softurlscan</item>
     </string-array>
 
 	<string-array name="list_desirez_fixes">
