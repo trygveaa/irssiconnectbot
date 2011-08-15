@@ -68,6 +68,7 @@ public class PreferenceConstants {
 	public static final String WIFI_LOCK = "wifilock";
 
 	public static final String BUMPY_ARROWS = "bumpyarrows";
+	public static final String BUMPY_SCROLL = "bumpyscroll";
 
 	public static final String ACTIONBAR = "actionbarsetting";
 

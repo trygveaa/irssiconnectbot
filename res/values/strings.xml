@@ -204,6 +204,11 @@
 	<!-- Summary for the haptic feedback (bumpy arrow) preference -->
 	<string name="pref_bumpyarrows_summary">"Vibrate when sending arrow keys from trackball; useful for laggy connections"</string>
 
+	<!-- Name for the haptic feedback (bumpy scroll) preference -->
+	<string name="pref_bumpyscroll_title">"Bumpy scroll"</string>
+	<!-- Summary for the haptic feedback (bumpy scroll) preference -->
+	<string name="pref_bumpyscroll_summary">"Vibrate when touch scrolling; useful for laggy connections (only works if Bumpy Arrows is disabled)"</string>
+
   <!-- Name for the action bar preference -->
   <string name="pref_actionbar_title">"Action Bar"</string>
   <!-- Sumary for the action bar preference -->

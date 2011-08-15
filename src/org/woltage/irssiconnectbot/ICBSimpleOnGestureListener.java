@@ -105,11 +105,13 @@ class ICBSimpleOnGestureListener extends GestureDetector.SimpleOnGestureListener
 				if (moved > 5) {
 					((vt320) terminal.bridge.buffer).keyPressed(vt320.KEY_PAGE_DOWN, ' ', 0);
 					terminal.bridge.tryKeyVibrate();
+					terminal.bridge.tryScrollVibrate();
 					totalY = 0;
 					return true;
 				} else if (moved < -5) {
 					((vt320) terminal.bridge.buffer).keyPressed(vt320.KEY_PAGE_UP, ' ', 0);
 					terminal.bridge.tryKeyVibrate();
+					terminal.bridge.tryScrollVibrate();
 					totalY = 0;
 					return true;
 				}

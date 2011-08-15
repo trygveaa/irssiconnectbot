@@ -1015,6 +1015,7 @@ public class ConsoleActivity extends Activity {
                 ((vt320)terminal.bridge.buffer).write(0x10);
             }
             terminal.bridge.tryKeyVibrate();
+            terminal.bridge.tryScrollVibrate();
     }
 
     /**

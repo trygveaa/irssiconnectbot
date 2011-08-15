@@ -105,6 +105,7 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 
 	private Vibrator vibrator;
 	private volatile boolean wantKeyVibration;
+	private volatile boolean wantScrollVibration;
 	public static final long VIBRATE_DURATION = 30;
 
 	private boolean wantBellVibration;
@@ -174,6 +175,7 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		wantKeyVibration = prefs.getBoolean(PreferenceConstants.BUMPY_ARROWS, true);
+		wantScrollVibration = prefs.getBoolean(PreferenceConstants.BUMPY_SCROLL, true);
 
 		wantBellVibration = prefs.getBoolean(PreferenceConstants.BELL_VIBRATE, true);
 
@@ -598,6 +600,11 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 
 	public void tryKeyVibrate() {
 		if (wantKeyVibration)
+			vibrate();
+	}
+
+	public void tryScrollVibrate() {
+		if (wantScrollVibration && !wantKeyVibration)
 			vibrate();
 	}
 
