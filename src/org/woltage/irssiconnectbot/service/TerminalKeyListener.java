@@ -204,8 +204,8 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
             if( (keyCode == KeyEvent.KEYCODE_SYM || keyCode == KeyEvent.KEYCODE_PICTSYMBOLS ||
                     key == KeyCharacterMap.PICKER_DIALOG_INPUT) && v != null) {
                 showCharPickerDialog(v);
-                if(metaState == 4) { // reset fn-key state
-                    metaState = 0;
+                if ((metaState & META_ALT_ON) != 0) { // reset fn-key state
+                    metaState &= ~META_ALT_ON;
                     bridge.redraw();
                 }
                 return true;
@@ -444,9 +444,9 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                 break;
 
             case KeyEvent.KEYCODE_DEL:
-                //Delete key and shift/caps+backspace fix for Desire Z
+                //Delete key and shift/caps+backspace or alt/capslock fix for Desire Z
                 if(!prefs.getString("htcDesireZfix", "false").equals("false")) {
-                    if(metaState == 4 || metaState == 8) {
+                    if( ((metaState & META_ALT_MASK) != 0) || ((metaState & META_SHIFT_MASK) != 0) ) {
                         ((vt320) buffer).keyPressed(vt320.KEY_DELETE, ' ', getStateForBuffer());
                     }else{
                         ((vt320) buffer).keyPressed(vt320.KEY_BACK_SPACE, ' ', 0);
