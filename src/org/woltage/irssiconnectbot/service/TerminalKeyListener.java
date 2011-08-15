@@ -320,13 +320,6 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
             if (hardKeyboard && !hardKeyboardHidden &&
                     event.getRepeatCount() == 0) {
 
-                // Fix for Desire Z TAB key, keyCode == 20
-                // NB: keyCode of DPAD down arrow is also 20, so only differense is event.getFlags() == 2 (dpad down flag is 0)
-                if(!prefs.getString("htcDesireZfix", "false").equals("false") && keyCode == 20 && event.getFlags() == 2) {
-                    bridge.transport.write(0x09);
-                    return true;
-                }
-
                 switch (keyCode) {
                 case KeyEvent.KEYCODE_ALT_LEFT:
                 case KeyEvent.KEYCODE_ALT_RIGHT:
