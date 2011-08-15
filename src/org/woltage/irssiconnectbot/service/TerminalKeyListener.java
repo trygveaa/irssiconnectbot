@@ -193,6 +193,11 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                 mDeadKey = 0;
             }
 
+            // Android keyboard kcm files map ENTER to '\n' (0xA), which is incorrect.
+            // A keyboard needs to send '\r' (0xD) when the ENTER butting is pressed.
+            // It may be converted to a different end-of-line sequence by a terminal program.
+            // Without this fix, many programs will misinterpret the key as ^J instead of RETURN.
+            // So just don't pass KEYCODE_ENTER directly, but handle it lateron manually
             final boolean printing = (key != 0 && keyCode != KeyEvent.KEYCODE_ENTER);
 
             //Show up the CharacterPickerDialog when the SYM key is pressed
