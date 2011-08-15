@@ -148,10 +148,16 @@ public class ConsoleActivity extends Activity {
 
             bound.setResizeAllowed(true);
 
+            // clear all animation flags, so that after onPause() and onResume() (i.e. switching using home key) no slide animation is shown
+            flip.setAnimation(null);
+            flip.setInAnimation(null);
+            flip.setOutAnimation(null);
+
+
             // clear out any existing bridges and record requested index
             flip.removeAllViews();
 
-            final String requestedNickname = (requested != null) ? requested.getFragment() : null;
+            final String requestedNickname = (requested != null) ? requested.getFragment() : (bound.defaultBridge != null) ? bound.defaultBridge.host.getNickname() : null;
             int requestedIndex = 0;
 
             TerminalBridge requestedBridge = bound
@@ -866,6 +872,9 @@ public class ConsoleActivity extends Activity {
 
         if (forcedOrientation && bound != null)
             bound.setResizeAllowed(false);
+
+        // save the current flip view for later
+        updateDefault();
     }
 
     @Override
@@ -1031,6 +1040,9 @@ public class ConsoleActivity extends Activity {
         TerminalView terminal = (TerminalView) view;
         if (bound == null) return;
         bound.defaultBridge = terminal.bridge;
+
+        // any previous intent extra data is irrelevant now, thus set requested to null and save current defaultBridge
+        requested = null;
     }
 
     protected void updateEmptyVisible() {
