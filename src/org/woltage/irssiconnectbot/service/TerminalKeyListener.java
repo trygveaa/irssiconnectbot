@@ -418,6 +418,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                 bridge.tryKeyVibrate();
                 return true;
             case KeyEvent.KEYCODE_CAMERA:
+            case KeyEvent.KEYCODE_FOCUS:
                 // check to see which shortcut the camera button triggers
                 String camera = manager.prefs.getString(
                         PreferenceConstants.CAMERA,
