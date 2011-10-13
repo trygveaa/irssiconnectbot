@@ -55,12 +55,10 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.nullwire.trace.ExceptionHandler;
-
 /**
- * Manager for SSH connections that runs as a background service. This service
- * holds a list of currently connected SSH bridges that are ready for connection
- * up to a GUI if needed.
+ * Manager for SSH connections that runs as a service. This service holds a list
+ * of currently connected SSH bridges that are ready for connection up to a GUI
+ * if needed.
  *
  * @author jsharkey
  */
@@ -137,14 +135,10 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 
 	@Override
 	public void onCreate() {
-		Log.i(TAG, "Starting background service");
-
                 IntentFilter screenPowerFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
                 screenPowerFilter.addAction(Intent.ACTION_SCREEN_OFF);
                 mScreenPowerReceiver = new ScreenPowerReceiver();
                 registerReceiver(mScreenPowerReceiver, screenPowerFilter);
-
-		ExceptionHandler.register(this);
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
@@ -196,7 +190,7 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 
 	@Override
 	public void onDestroy() {
-		Log.i(TAG, "Destroying background service");
+		Log.i(TAG, "Destroying service");
 
                 unregisterReceiver(mScreenPowerReceiver);
 
@@ -487,7 +481,7 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 				idleTimer.schedule(new IdleTask(), IDLE_TIMEOUT);
 			}
 		} else {
-			Log.d(TAG, "Stopping background service immediately");
+			Log.d(TAG, "Stopping service immediately");
 			stopSelf();
 		}
 	}

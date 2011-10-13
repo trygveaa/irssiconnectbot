@@ -82,7 +82,6 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.bugsense.trace.BugSenseHandler;
-import com.nullwire.trace.ExceptionHandler;
 
 import de.mud.terminal.vt320;
 
@@ -294,7 +293,6 @@ public class ConsoleActivity extends Activity {
 
         this.setContentView(R.layout.act_console);
             BugSenseHandler.setup(this, "d27a12dc");
-        ExceptionHandler.register(this);
 
         clipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
