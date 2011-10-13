@@ -26,7 +26,6 @@ import org.woltage.irssiconnectbot.service.TerminalManager;
 import org.woltage.irssiconnectbot.transport.TransportFactory;
 import org.woltage.irssiconnectbot.util.HostDatabase;
 import org.woltage.irssiconnectbot.util.PreferenceConstants;
-import org.woltage.irssiconnectbot.util.UpdateHelper;
 import org.woltage.irssiconnectbot.util.InstallMosh;
 
 import android.app.Activity;
@@ -170,9 +169,6 @@ public class HostListActivity extends ListActivity {
 		if(!agreed) {
 			this.startActivityForResult(new Intent(this, WizardActivity.class), REQUEST_EULA);
 		}
-
-		// start thread to check for new version
-		//new UpdateHelper(this);
 
                 // install Mosh binaries
                 new InstallMosh(this);
