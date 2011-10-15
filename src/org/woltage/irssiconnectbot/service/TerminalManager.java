@@ -21,8 +21,14 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.woltage.irssiconnectbot.R;
 import org.woltage.irssiconnectbot.bean.HostBean;
@@ -157,7 +163,7 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 		for (PubkeyBean pubkey : pubkeys) {
 			try {
 				PrivateKey privKey = PubkeyUtils.decodePrivate(pubkey.getPrivateKey(), pubkey.getType());
-				PublicKey pubKey = PubkeyUtils.decodePublic(pubkey.getPublicKey(), pubkey.getType());
+				PublicKey pubKey = pubkey.getPublicKey();
 				Object trileadKey = PubkeyUtils.convertToTrilead(privKey, pubKey);
 
 				addKey(pubkey, trileadKey);
