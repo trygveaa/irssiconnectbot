@@ -729,7 +729,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
         urlListView.setOnItemClickListener(urlListener);
         urlListView.setOnItemLongClickListener(urlListener);
 
-        urlListView.setAdapter(new ArrayAdapter<String>(v.getContext(), android.R.layout.simple_list_item_1, urls));
+        urlListView.setAdapter(new ArrayAdapter<String>(v.getContext(), R.layout.item_urlscan_url, urls));
         urlDialog.setContentView(urlListView);
         urlDialog.show();
     }
