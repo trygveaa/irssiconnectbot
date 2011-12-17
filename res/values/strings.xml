@@ -488,6 +488,8 @@
     <string name="color_green">"green"</string>
     <string name="color_blue">"blue"</string>
     <string name="color_gray">"gray"</string>
+    <string name="colors_fg">FG:</string>
+    <string name="color_bg">BG:</string>
 	
 	 <!-- Swipe type -->
 	<string name="pref_swipe_title">Swipe Left/Right</string>

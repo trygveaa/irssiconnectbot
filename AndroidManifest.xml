@@ -32,7 +32,6 @@
             android:backupAgent=".service.BackupAgent"
             android:killAfterRestore="true"
             android:hardwareAccelerated="false">
-
         <activity android:name=".HostListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
