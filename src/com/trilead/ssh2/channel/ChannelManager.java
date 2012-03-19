@@ -455,10 +455,10 @@ public class ChannelManager implements MessageHandler
 		rfd.targetAddress = targetAddress;
 		rfd.targetPort = targetPort;
 
+		Integer key = new Integer(bindPort);
+
 		synchronized (remoteForwardings)
 		{
-			Integer key = new Integer(bindPort);
-
 			if (remoteForwardings.get(key) != null)
 			{
 				throw new IOException("There is already a forwarding for remote port " + bindPort);
@@ -487,7 +487,7 @@ public class ChannelManager implements MessageHandler
 		{
 			synchronized (remoteForwardings)
 			{
-				remoteForwardings.remove(rfd);
+				remoteForwardings.remove(key);
 			}
 			throw e;
 		}
@@ -499,9 +499,11 @@ public class ChannelManager implements MessageHandler
 	{
 		RemoteForwardingData rfd = null;
 
+		Integer key = new Integer(bindPort);
+
 		synchronized (remoteForwardings)
 		{
-			rfd = (RemoteForwardingData) remoteForwardings.get(new Integer(bindPort));
+			rfd = (RemoteForwardingData) remoteForwardings.get(key);
 
 			if (rfd == null)
 				throw new IOException("Sorry, there is no known remote forwarding for remote port " + bindPort);
@@ -529,7 +531,7 @@ public class ChannelManager implements MessageHandler
 			synchronized (remoteForwardings)
 			{
 				/* Only now we are sure that no more forwarded connections will arrive */
-				remoteForwardings.remove(rfd);
+				remoteForwardings.remove(key);
 			}
 		}
 
