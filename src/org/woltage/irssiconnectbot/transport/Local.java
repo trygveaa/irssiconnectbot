@@ -50,6 +50,8 @@ public class Local extends AbsTransport {
 	private FileInputStream is;
 	private FileOutputStream os;
 
+	private int shellPid = 0;
+
 	/**
 	 *
 	 */
@@ -71,6 +73,11 @@ public class Local extends AbsTransport {
 
 	@Override
 	public void close() {
+		// make sure the shell is being killed, to prevent thread- and process-leaks
+		if (shellPid != 0) {
+			android.os.Process.killProcess(shellPid);
+		}
+
 		try {
 			if (os != null) {
 				os.close();
@@ -101,10 +108,11 @@ public class Local extends AbsTransport {
 			return;
 		}
 
-		final int shellPid = pids[0];
+		shellPid = pids[0];
 		Runnable exitWatcher = new Runnable() {
 			public void run() {
 				Exec.waitFor(shellPid);
+				shellPid = 0; // reset to 0, no need to call Process.kill() anymore
 
 				bridge.dispatchDisconnect(false);
 			}
