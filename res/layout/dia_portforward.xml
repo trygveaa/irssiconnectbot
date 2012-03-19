@@ -68,6 +68,23 @@
 
 		<TableRow>
 			<TextView
+				android:text="@string/prompt_bind_host"
+				android:paddingRight="10dip"
+				android:gravity="right|center_vertical"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				/>
+
+			<EditText
+				android:id="@+id/portforward_bind"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:inputType="textEmailAddress"
+				/>
+		</TableRow>
+
+		<TableRow>
+			<TextView
 				android:text="@string/prompt_source_port"
 				android:paddingRight="10dip"
 				android:gravity="right|center_vertical"

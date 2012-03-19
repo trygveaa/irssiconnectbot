@@ -34,6 +34,7 @@ public class PortForwardBean extends AbstractBean {
 	private long hostId = -1;
 	private String nickname = null;
 	private String type = null;
+	private String bindAddr = null;
 	private int sourcePort = -1;
 	private String destAddr = null;
 	private int destPort = -1;
@@ -44,17 +45,22 @@ public class PortForwardBean extends AbstractBean {
 
 	/**
 	 * @param id database ID of port forward
+	 * @param hostId ID of the host
 	 * @param nickname Nickname to use to identify port forward
 	 * @param type One of the port forward types from {@link HostDatabase}
+	 * @param bindAddr Interface to bind source port to
+	 *        empty String means all interfaces
+	 *        for remote forwards GatewayPorts must be enabled on the server side
 	 * @param sourcePort Source port number
 	 * @param destAddr Destination hostname or IP address
 	 * @param destPort Destination port number
 	 */
-	public PortForwardBean(long id, long hostId, String nickname, String type, int sourcePort, String destAddr, int destPort) {
+	public PortForwardBean(long id, long hostId, String nickname, String type, String bindAddr, int sourcePort, String destAddr, int destPort) {
 		this.id = id;
 		this.hostId = hostId;
 		this.nickname = nickname;
 		this.type = type;
+		setBindAddr(bindAddr);
 		this.sourcePort = sourcePort;
 		this.destAddr = destAddr;
 		this.destPort = destPort;
@@ -62,18 +68,23 @@ public class PortForwardBean extends AbstractBean {
 
 	/**
 	 * @param type One of the port forward types from {@link HostDatabase}
+	 * @param bindAddr Interface to bind source port to
+	 *        empty String means all interfaces
+	 *        for remote forwards GatewayPorts must be enabled on the server side
 	 * @param source Source port number
 	 * @param dest Destination is "host:port" format
 	 */
-	public PortForwardBean(long hostId, String nickname, String type, String source, String dest) {
+	public PortForwardBean(long hostId, String nickname, String type, String bindAddr, String source, String dest) {
 		this.hostId = hostId;
 		this.nickname = nickname;
+		setBindAddr(bindAddr);
 		this.type = type;
 		this.sourcePort = Integer.parseInt(source);
 
 		setDest(dest);
 	}
 
+	@Override
 	public String getBeanName() {
 		return BEAN_NAME;
 	}
@@ -118,6 +129,21 @@ public class PortForwardBean extends AbstractBean {
 	 */
 	public String getType() {
 		return type;
+	}
+
+	/**
+	 * @param bindAddr the bindAddr to set
+	 *        null, "", and "*" will be replaced with "0.0.0.0" to bind to all interfaces
+	 */
+	public void setBindAddr(String bindAddr) {
+		this.bindAddr = bindAddr == null || bindAddr.equals("") || bindAddr.equals("*") ? "0.0.0.0" : bindAddr;
+	}
+
+	/**
+	 * @return the sourcePort
+	 */
+	public String getBindAddr() {
+		return bindAddr;
 	}
 
 	/**
@@ -207,15 +233,15 @@ public class PortForwardBean extends AbstractBean {
 		String description = "Unknown type";
 
 		if (HostDatabase.PORTFORWARD_LOCAL.equals(type)) {
-			description = String.format("Local port %d to %s:%d", sourcePort, destAddr, destPort);
+			description = String.format("Local port %s:%d to %s:%d", bindAddr, sourcePort, destAddr, destPort);
 		} else if (HostDatabase.PORTFORWARD_REMOTE.equals(type)) {
-			description = String.format("Remote port %d to %s:%d", sourcePort, destAddr, destPort);
+			description = String.format("Remote port %s:%d to %s:%d", bindAddr, sourcePort, destAddr, destPort);
 /* I don't think we need the SOCKS4 type.
 		} else if (HostDatabase.PORTFORWARD_DYNAMIC4.equals(type)) {
-			description = String.format("Dynamic port %d (SOCKS4)", sourcePort);
+			description = String.format("Dynamic port %s:%d (SOCKS4)", bindAddr, sourcePort);
 */
 		} else if (HostDatabase.PORTFORWARD_DYNAMIC5.equals(type)) {
-			description = String.format("Dynamic port %d (SOCKS)", sourcePort);
+			description = String.format("Dynamic port %s:%d (SOCKS)", bindAddr, sourcePort);
 		}
 
 		return description;
@@ -224,6 +250,7 @@ public class PortForwardBean extends AbstractBean {
 	/**
 	 * @return
 	 */
+	@Override
 	public ContentValues getValues() {
 		ContentValues values = new ContentValues();
 
@@ -233,6 +260,7 @@ public class PortForwardBean extends AbstractBean {
 		values.put(HostDatabase.FIELD_PORTFORWARD_SOURCEPORT, sourcePort);
 		values.put(HostDatabase.FIELD_PORTFORWARD_DESTADDR, destAddr);
 		values.put(HostDatabase.FIELD_PORTFORWARD_DESTPORT, destPort);
+		values.put(HostDatabase.FIELD_PORTFORWARD_BINDADDR, bindAddr);
 
 		return values;
 	}

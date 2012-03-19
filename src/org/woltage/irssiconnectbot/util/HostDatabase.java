@@ -47,7 +47,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 	public final static String TAG = "ConnectBot.HostDatabase";
 
 	public final static String DB_NAME = "hosts";
-	public final static int DB_VERSION = 23;
+	public final static int DB_VERSION = 24;
 
 	public final static String TABLE_HOSTS = "hosts";
 	public final static String FIELD_HOST_NICKNAME = "nickname";
@@ -79,6 +79,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 	public final static String FIELD_PORTFORWARD_SOURCEPORT = "sourceport";
 	public final static String FIELD_PORTFORWARD_DESTADDR = "destaddr";
 	public final static String FIELD_PORTFORWARD_DESTPORT = "destport";
+	public final static String FIELD_PORTFORWARD_BINDADDR = "bindaddr";
 
 	public final static String TABLE_COLORS = "colors";
 	public final static String FIELD_COLOR_SCHEME = "scheme";
@@ -184,7 +185,8 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 				+ FIELD_PORTFORWARD_TYPE + " TEXT NOT NULL DEFAULT " + PORTFORWARD_LOCAL + ", "
 				+ FIELD_PORTFORWARD_SOURCEPORT + " INTEGER NOT NULL DEFAULT 8080, "
 				+ FIELD_PORTFORWARD_DESTADDR + " TEXT, "
-				+ FIELD_PORTFORWARD_DESTPORT + " TEXT)");
+				+ FIELD_PORTFORWARD_DESTPORT + " TEXT, "
+				+ FIELD_PORTFORWARD_BINDADDR + " TEXT)");
 
 		db.execSQL("CREATE INDEX " + TABLE_PORTFORWARDS + FIELD_PORTFORWARD_HOSTID + "index ON "
 				+ TABLE_PORTFORWARDS + " (" + FIELD_PORTFORWARD_HOSTID + ");");
@@ -270,6 +272,9 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
                                         + " ADD COLUMN " + FIELD_HOST_MOSHPORT + " INTEGER DEFAULT 0");
                         db.execSQL("ALTER TABLE " + TABLE_HOSTS
                                         + " ADD COLUMN " + FIELD_HOST_LOCALE + " TEXT DEFAULT '" + LOCALE_DEFAULT + "'");
+		case 23:
+			db.execSQL("ALTER TABLE " + TABLE_PORTFORWARDS
+					+ " ADD COLUMN " + FIELD_PORTFORWARD_BINDADDR + " TEXT");
 		}
 	}
 
@@ -609,7 +614,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 
 			Cursor c = db.query(TABLE_PORTFORWARDS, new String[] {
 					"_id", FIELD_PORTFORWARD_NICKNAME, FIELD_PORTFORWARD_TYPE, FIELD_PORTFORWARD_SOURCEPORT,
-					FIELD_PORTFORWARD_DESTADDR, FIELD_PORTFORWARD_DESTPORT },
+					FIELD_PORTFORWARD_DESTADDR, FIELD_PORTFORWARD_DESTPORT, FIELD_PORTFORWARD_BINDADDR },
 					FIELD_PORTFORWARD_HOSTID + " = ?", new String[] { String.valueOf(host.getId()) },
 					null, null, null);
 
@@ -619,6 +624,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 					host.getId(),
 					c.getString(1),
 					c.getString(2),
+					c.getString(6),
 					c.getInt(3),
 					c.getString(4),
 					c.getInt(5));

@@ -44,18 +44,18 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 /**
  * List all portForwards for a particular host and provide a way for users to add more portForwards,
@@ -178,6 +178,8 @@ public class PortForwardListActivity extends ListActivity {
 				final View portForwardView = inflater.inflate(R.layout.dia_portforward, null, false);
 				final EditText destEdit = (EditText) portForwardView.findViewById(R.id.portforward_destination);
 				final Spinner typeSpinner = (Spinner)portForwardView.findViewById(R.id.portforward_type);
+				final EditText bindAddrEdit = (EditText) portForwardView.findViewById(R.id.portforward_bind);
+				bindAddrEdit.setText("localhost"); // set localhost as default text for new forwards
 
 				typeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 					public void onItemSelected(AdapterView<?> value, View view,
@@ -212,6 +214,7 @@ public class PortForwardListActivity extends ListActivity {
 								PortForwardBean pfb = new PortForwardBean(
 										host != null ? host.getId() : -1,
 										nicknameEdit.getText().toString(), type,
+										bindAddrEdit.getText().toString(),
 										sourcePortEdit.getText().toString(),
 										destEdit.getText().toString());
 
@@ -263,6 +266,9 @@ public class PortForwardListActivity extends ListActivity {
 				final EditText nicknameEdit = (EditText) editTunnelView.findViewById(R.id.nickname);
 				nicknameEdit.setText(pfb.getNickname());
 
+				final EditText bindAddrEdit = (EditText) editTunnelView.findViewById(R.id.portforward_bind);
+				bindAddrEdit.setText(String.valueOf(pfb.getBindAddr()));
+
 				final EditText sourcePortEdit = (EditText) editTunnelView.findViewById(R.id.portforward_source);
 				sourcePortEdit.setText(String.valueOf(pfb.getSourcePort()));
 
@@ -304,6 +310,7 @@ public class PortForwardListActivity extends ListActivity {
 									break;
 								}
 
+								pfb.setBindAddr(bindAddrEdit.getText().toString());
 								pfb.setSourcePort(Integer.parseInt(sourcePortEdit.getText().toString()));
 								pfb.setDest(destEdit.getText().toString());
 

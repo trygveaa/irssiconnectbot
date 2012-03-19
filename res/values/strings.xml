@@ -79,6 +79,8 @@
 	<string name="prompt_nickname">"Nickname:"</string>
 	<!-- An example string that could be used as a nickname for a pubkey. -->
 	<string name="prompt_nickname_hint_pubkey">"My work key"</string>
+	<!-- The bind host for port forwards. -->
+	<string name="prompt_bind_host">"Bind to:"</string>
 	<!-- The source TCP port for port forwards. -->
 	<string name="prompt_source_port">"Source port:"</string>
 	<!-- The "host:port" combination used for port forward destinations. -->
