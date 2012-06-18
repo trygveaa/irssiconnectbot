@@ -191,6 +191,13 @@
 		android:defaultValue="true"
 		/>
 		
+	<CheckBoxPreference
+		android:key="onScreenButtons"
+		android:title="@string/pref_onscreenbuttons_title"
+		android:summary="@string/pref_onscreenbuttons_summary"
+		android:defaultValue="true"
+		/>
+
 	<ListPreference
 		android:title="@string/pref_htcdesirez_title"
 		android:summary="@string/pref_htcdesirez_summary"

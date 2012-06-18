@@ -87,6 +87,8 @@ public class PreferenceConstants {
 
         public static final String INSTALLED_MOSH_VERSION = "moshVersion";
 
+	public static final String ON_SCREEN_BUTTONS = "onScreenButtons";
+
 	/* Backup identifiers */
 	public static final String BACKUP_PREF_KEY = "prefs";
 }

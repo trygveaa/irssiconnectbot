@@ -17,14 +17,15 @@
 
 package org.woltage.irssiconnectbot;
 
-import android.content.res.Configuration;
+import org.woltage.irssiconnectbot.bean.SelectionArea;
+import org.woltage.irssiconnectbot.util.PreferenceConstants;
+
 import android.os.Handler;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import org.woltage.irssiconnectbot.bean.SelectionArea;
 
 class ICBOnTouchListener implements View.OnTouchListener {
 
@@ -108,26 +109,29 @@ class ICBOnTouchListener implements View.OnTouchListener {
 
 		//Configuration config = consoleActivity.getResources().getConfiguration();
 
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			lastX = event.getX();
-			lastY = event.getY();
-		} else if (event.getAction() == MotionEvent.ACTION_UP
-				&& keyboardGroup.getVisibility() == View.GONE
-				&& event.getEventTime() - event.getDownTime() < ConsoleActivity.CLICK_TIME
-				&& Math.abs(event.getX() - lastX) < ConsoleActivity.MAX_CLICK_DISTANCE
-				&& Math.abs(event.getY() - lastY) < ConsoleActivity.MAX_CLICK_DISTANCE) {
-			keyboardGroup.startAnimation(consoleActivity.keyboard_fade_in);
-			keyboardGroup.setVisibility(View.VISIBLE);
+		// show on-screen buttons / keyboardGroup if preference is enabled
+		if (consoleActivity.prefs.getBoolean(PreferenceConstants.ON_SCREEN_BUTTONS, true)) {
+			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+				lastX = event.getX();
+				lastY = event.getY();
+			} else if (event.getAction() == MotionEvent.ACTION_UP
+					&& keyboardGroup.getVisibility() == View.GONE
+					&& event.getEventTime() - event.getDownTime() < ConsoleActivity.CLICK_TIME
+					&& Math.abs(event.getX() - lastX) < ConsoleActivity.MAX_CLICK_DISTANCE
+					&& Math.abs(event.getY() - lastY) < ConsoleActivity.MAX_CLICK_DISTANCE) {
+				keyboardGroup.startAnimation(consoleActivity.keyboard_fade_in);
+				keyboardGroup.setVisibility(View.VISIBLE);
 
-			handler.postDelayed(new Runnable() {
-				public void run() {
-					if (keyboardGroup.getVisibility() == View.GONE)
-						return;
+				handler.postDelayed(new Runnable() {
+					public void run() {
+						if (keyboardGroup.getVisibility() == View.GONE)
+							return;
 
-					keyboardGroup.startAnimation(consoleActivity.keyboard_fade_out);
-					keyboardGroup.setVisibility(View.GONE);
-				}
-			}, ConsoleActivity.KEYBOARD_DISPLAY_TIME);
+						keyboardGroup.startAnimation(consoleActivity.keyboard_fade_out);
+						keyboardGroup.setVisibility(View.GONE);
+					}
+				}, ConsoleActivity.KEYBOARD_DISPLAY_TIME);
+			}
 		}
 
 		// pass any touch events back to detector
