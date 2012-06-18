@@ -176,7 +176,10 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 		wantKeyVibration = prefs.getBoolean(PreferenceConstants.BUMPY_ARROWS, true);
 
 		wantBellVibration = prefs.getBoolean(PreferenceConstants.BELL_VIBRATE, true);
-		enableMediaPlayer();
+
+		if (prefs.getBoolean(PreferenceConstants.BELL, true)) {
+		    enableMediaPlayer();
+		}
 
 		hardKeyboardHidden = (res.getConfiguration().hardKeyboardHidden ==
 			Configuration.HARDKEYBOARDHIDDEN_YES);
