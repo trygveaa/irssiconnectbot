@@ -481,6 +481,19 @@ public class ConsoleActivity extends Activity {
             }
         });
 
+        final ImageView tabButton = (ImageView) findViewById(R.id.button_tab);
+        tabButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View view) {
+                View flip = findCurrentView(R.id.console_flip);
+                if (flip == null) return;
+                TerminalView terminal = (TerminalView)flip;
+
+                terminal.bridge.injectString("\t");
+
+                keyboardGroup.setVisibility(View.GONE);
+            }
+        });
+
         // detect fling gestures to switch between terminals
         final GestureDetector detect = new GestureDetector(
                 new ICBSimpleOnGestureListener(this));
