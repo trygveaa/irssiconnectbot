@@ -135,6 +135,7 @@
 			android:layout_toLeftOf="@+id/button_keyboard"
 			android:layout_alignParentBottom="true"
 			android:src="@+drawable/button_input"
+			android:alpha="0.6"
 			/>
 
 		<ImageView
@@ -144,6 +145,7 @@
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentRight="true"
 			android:src="@+drawable/button_keyboard"
+			android:alpha="0.6"
 			android:contentDescription="@string/image_description_show_keyboard"
 			/>
 			
@@ -155,6 +157,7 @@
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentBottom="true"
 			android:src="@+drawable/button_ctrl"
+			android:alpha="0.6"
 			android:contentDescription="@string/image_description_toggle_control_character"
 			/>
 
@@ -166,6 +169,7 @@
 			android:layout_toRightOf="@+id/button_ctrl"
 			android:layout_alignParentBottom="true"
 			android:src="@+drawable/button_esc"
+			android:alpha="0.6"
 			android:contentDescription="@string/image_description_send_escape_character"
 			/>
 
@@ -177,6 +181,7 @@
 			android:layout_toRightOf="@+id/button_esc"
 			android:layout_alignParentBottom="true"
 			android:src="@+drawable/button_tab"
+			android:alpha="0.6"
 			android:contentDescription="@string/image_description_send_tab_character"
 			/>
 
@@ -188,6 +193,7 @@
 			android:layout_alignParentBottom="true"
 			android:layout_toRightOf="@+id/button_tab"
 			android:src="@+drawable/button_sym"
+			android:alpha="0.6"
 			/>
 
 		<ImageView
@@ -199,6 +205,7 @@
 			android:layout_alignParentLeft="true"
 			android:layout_above="@+id/button_ctrl"
 			android:src="@+drawable/button_left"
+			android:alpha="0.6"
 			android:contentDescription="@string/image_description_send_left_character"
 			/>
 
@@ -211,6 +218,7 @@
 			android:layout_toRightOf="@+id/button_left"
 			android:layout_above="@+id/button_ctrl"
 			android:src="@+drawable/button_down"
+			android:alpha="0.6"
 			android:contentDescription="@string/image_description_send_down_character"
 			/>
 
@@ -223,6 +231,7 @@
 			android:layout_toRightOf="@+id/button_down"
 			android:layout_above="@+id/button_ctrl"
 			android:src="@+drawable/button_up"
+			android:alpha="0.6"
 			android:contentDescription="@string/image_description_send_up_character"
 			/>
 
@@ -235,6 +244,7 @@
 			android:layout_toRightOf="@+id/button_up"
 			android:layout_above="@+id/button_ctrl"
 			android:src="@+drawable/button_right"
+			android:alpha="0.6"
 			android:contentDescription="@string/image_description_send_right_character"
 			/>
 
