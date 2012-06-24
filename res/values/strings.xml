@@ -532,6 +532,22 @@
 	     accessibility purposes. -->
 	<string name="image_description_send_tab_character">Send tab character.</string>
 
+	<!-- Describes the icon of the "send tab character" button in the terminal view for
+		 accessibility purposes. -->
+	<string name="image_description_send_left_character">Send left character.</string>
+
+	<!-- Describes the icon of the "send tab character" button in the terminal view for
+		 accessibility purposes. -->
+	<string name="image_description_send_down_character">Send down character.</string>
+
+	<!-- Describes the icon of the "send tab character" button in the terminal view for
+		 accessibility purposes. -->
+	<string name="image_description_send_up_character">Send up character.</string>
+
+	<!-- Describes the icon of the "send tab character" button in the terminal view for
+		 accessibility purposes. -->
+	<string name="image_description_send_right_character">Send right character.</string>
+
 	<!-- Describes the icon of the "show keyboard" button in the terminal view for accessibility
 	     purposes. -->
 	<string name="image_description_show_keyboard">Show keyboard.</string>

@@ -137,6 +137,8 @@ public class ConsoleActivity extends Activity {
     private ImageView mKeyboardButton;
     private ImageView mInputButton;
 
+    private Runnable hideKeyboardGroup;
+
     private ServiceConnection connection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             bound = ((TerminalManager.TerminalBinder) service).getService();
@@ -491,6 +493,58 @@ public class ConsoleActivity extends Activity {
                 terminal.bridge.injectString("\t");
 
                 keyboardGroup.setVisibility(View.GONE);
+            }
+        });
+
+        final ImageView leftButton = (ImageView) findViewById(R.id.button_left);
+        leftButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View view) {
+                View flip = findCurrentView(R.id.console_flip);
+                if (flip == null) return;
+                TerminalView terminal = (TerminalView)flip;
+
+                TerminalKeyListener handler = terminal.bridge.getKeyHandler();
+                KeyEvent event = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT);
+                handler.onKey(null, event.getKeyCode(), event);
+            }
+        });
+
+        final ImageView downButton = (ImageView) findViewById(R.id.button_down);
+        downButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View view) {
+                View flip = findCurrentView(R.id.console_flip);
+                if (flip == null) return;
+                TerminalView terminal = (TerminalView)flip;
+
+                TerminalKeyListener handler = terminal.bridge.getKeyHandler();
+                KeyEvent event = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN);
+                handler.onKey(null, event.getKeyCode(), event);
+            }
+        });
+
+        final ImageView upButton = (ImageView) findViewById(R.id.button_up);
+        upButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View view) {
+                View flip = findCurrentView(R.id.console_flip);
+                if (flip == null) return;
+                TerminalView terminal = (TerminalView)flip;
+
+                TerminalKeyListener handler = terminal.bridge.getKeyHandler();
+                KeyEvent event = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP);
+                handler.onKey(null, event.getKeyCode(), event);
+            }
+        });
+
+        final ImageView rightButton = (ImageView) findViewById(R.id.button_right);
+        rightButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View view) {
+                View flip = findCurrentView(R.id.console_flip);
+                if (flip == null) return;
+                TerminalView terminal = (TerminalView)flip;
+
+                TerminalKeyListener handler = terminal.bridge.getKeyHandler();
+                KeyEvent event = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT);
+                handler.onKey(null, event.getKeyCode(), event);
             }
         });
 

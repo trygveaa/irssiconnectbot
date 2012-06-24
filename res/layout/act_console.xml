@@ -190,6 +190,54 @@
 			android:src="@+drawable/button_sym"
 			/>
 
+		<ImageView
+			android:id="@+id/button_left"
+			android:paddingRight="15dip"
+			android:paddingBottom="10dip"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_above="@+id/button_ctrl"
+			android:src="@+drawable/button_left"
+			android:contentDescription="@string/image_description_send_left_character"
+			/>
+
+		<ImageView
+			android:id="@+id/button_down"
+			android:paddingRight="15dip"
+			android:paddingBottom="10dip"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toRightOf="@+id/button_left"
+			android:layout_above="@+id/button_ctrl"
+			android:src="@+drawable/button_down"
+			android:contentDescription="@string/image_description_send_down_character"
+			/>
+
+		<ImageView
+			android:id="@+id/button_up"
+			android:paddingRight="15dip"
+			android:paddingBottom="10dip"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toRightOf="@+id/button_down"
+			android:layout_above="@+id/button_ctrl"
+			android:src="@+drawable/button_up"
+			android:contentDescription="@string/image_description_send_up_character"
+			/>
+
+		<ImageView
+			android:id="@+id/button_right"
+			android:paddingRight="15dip"
+			android:paddingBottom="10dip"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toRightOf="@+id/button_up"
+			android:layout_above="@+id/button_ctrl"
+			android:src="@+drawable/button_right"
+			android:contentDescription="@string/image_description_send_right_character"
+			/>
+
 	</RelativeLayout>
 
 </RelativeLayout>
