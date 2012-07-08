@@ -197,6 +197,10 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 	 * Disconnect all currently connected bridges.
 	 */
 	private void disconnectAll(final boolean immediate) {
+                disconnectAll(immediate, false);
+        }
+
+	private void disconnectAll(final boolean immediate, boolean onlyRemote) {
 		TerminalBridge[] tmpBridges = null;
 
 		synchronized (bridges) {
@@ -207,8 +211,10 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 
 		if (tmpBridges != null) {
 			// disconnect and dispose of any existing bridges
-			for (int i = 0; i < tmpBridges.length; i++)
-				tmpBridges[i].dispatchDisconnect(immediate);
+			for (int i = 0; i < tmpBridges.length; i++) {
+                                if(tmpBridges[i].transport.usesNetwork() || !onlyRemote)
+                                        tmpBridges[i].dispatchDisconnect(immediate);
+                        }
 		}
 	}
 
@@ -669,7 +675,7 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 		final Thread t = new Thread() {
 			@Override
 			public void run() {
-				disconnectAll(false);
+				disconnectAll(false, true);
 			}
 		};
 		t.setName("Disconnector");
