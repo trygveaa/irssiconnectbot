@@ -55,9 +55,11 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="mosh"/>
                 <data android:scheme="ssh"/>
                 <data android:scheme="telnet"/>
                 <data android:scheme="local"/>
+                <!-- format:  mosh://user@host:sshport/#nickname  -->
                 <!-- format:  ssh://user@host:port/#nickname  -->
                 <!-- format:  telnet://host:port/#nickname  -->
                 <!-- format:  local://  -->

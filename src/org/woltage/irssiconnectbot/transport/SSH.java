@@ -94,41 +94,41 @@ public class SSH extends AbsTransport implements ConnectionMonitor, InteractiveC
 		AUTH_PASSWORD = "password",
 		AUTH_KEYBOARDINTERACTIVE = "keyboard-interactive";
 
-	private final static int AUTH_TRIES = 20;
+	protected final static int AUTH_TRIES = 20;
 
 	static final Pattern hostmask;
 	static {
 		hostmask = Pattern.compile("^(.+)@([0-9a-z.-]+)(:(\\d+))?$", Pattern.CASE_INSENSITIVE);
 	}
 
-	private boolean compression = false;
-	private volatile boolean authenticated = false;
-	private volatile boolean connected = false;
-	private volatile boolean sessionOpen = false;
+	protected boolean compression = false;
+	protected volatile boolean authenticated = false;
+	protected volatile boolean connected = false;
+	protected volatile boolean sessionOpen = false;
 
 	private boolean pubkeysExhausted = false;
 	private boolean interactiveCanContinue = true;
 
-	private Connection connection;
-	private Session session;
-	private ConnectionInfo connectionInfo;
+	protected Connection connection;
+	protected Session session;
+	protected ConnectionInfo connectionInfo;
 
-	private OutputStream stdin;
-	private InputStream stdout;
-	private InputStream stderr;
+	protected OutputStream stdin;
+	protected InputStream stdout;
+	protected InputStream stderr;
 
-	private static final int conditions = ChannelCondition.STDOUT_DATA
+	protected static final int conditions = ChannelCondition.STDOUT_DATA
 		| ChannelCondition.STDERR_DATA
 		| ChannelCondition.CLOSED
 		| ChannelCondition.EOF;
 
 	private List<PortForwardBean> portForwards = new LinkedList<PortForwardBean>();
 
-	private int columns;
-	private int rows;
+	protected int columns;
+	protected int rows;
 
-	private int width;
-	private int height;
+	protected int width;
+	protected int height;
 
 	private String useAuthAgent = HostDatabase.AUTHAGENT_NO;
 	private String agentLockPassphrase;
@@ -202,7 +202,7 @@ public class SSH extends AbsTransport implements ConnectionMonitor, InteractiveC
 
 	}
 
-	private void authenticate() {
+	protected void authenticate() {
 		try {
 			if (connection.authenticateWithNone(host.getUsername())) {
 				finishConnection();
@@ -361,7 +361,7 @@ public class SSH extends AbsTransport implements ConnectionMonitor, InteractiveC
 	 * Internal method to request actual PTY terminal once we've finished
 	 * authentication. If called before authenticated, it will just fail.
 	 */
-	private void finishConnection() {
+	protected void finishConnection() {
 		authenticated = true;
 
 		for (PortForwardBean portForward : portForwards) {
@@ -484,7 +484,7 @@ public class SSH extends AbsTransport implements ConnectionMonitor, InteractiveC
 		}
 	}
 
-	private void onDisconnect() {
+	protected void onDisconnect() {
 		close();
 
 		bridge.dispatchDisconnect(false);
@@ -549,6 +549,10 @@ public class SSH extends AbsTransport implements ConnectionMonitor, InteractiveC
 	public void setOptions(Map<String, String> options) {
 		if (options.containsKey("compression"))
 			compression = Boolean.parseBoolean(options.get("compression"));
+	}
+
+	public String instanceProtocolName() {
+		return PROTOCOL;
 	}
 
 	public static String getProtocolName() {
@@ -754,7 +758,7 @@ public class SSH extends AbsTransport implements ConnectionMonitor, InteractiveC
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append(PROTOCOL)
+		sb.append(getProtocolName())
 			.append("://")
 			.append(Uri.encode(matcher.group(1)))
 			.append('@')
@@ -803,7 +807,7 @@ public class SSH extends AbsTransport implements ConnectionMonitor, InteractiveC
 	public HostBean createHost(Uri uri) {
 		HostBean host = new HostBean();
 
-		host.setProtocol(PROTOCOL);
+		host.setProtocol(instanceProtocolName());
 
 		host.setHostname(uri.getHost());
 
@@ -827,7 +831,7 @@ public class SSH extends AbsTransport implements ConnectionMonitor, InteractiveC
 
 	@Override
 	public void getSelectionArgs(Uri uri, Map<String, String> selection) {
-		selection.put(HostDatabase.FIELD_HOST_PROTOCOL, PROTOCOL);
+		selection.put(HostDatabase.FIELD_HOST_PROTOCOL, instanceProtocolName());
 		selection.put(HostDatabase.FIELD_HOST_NICKNAME, uri.getFragment());
 		selection.put(HostDatabase.FIELD_HOST_HOSTNAME, uri.getHost());
 

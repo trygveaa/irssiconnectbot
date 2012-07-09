@@ -124,6 +124,14 @@ static int create_subprocess(
   }
 }
 
+JNIEXPORT jint JNICALL Java_com_google_ase_Exec_setenv(
+    JNIEnv* env, jclass clazz, jstring name, jstring value) {
+  char *name_8 = JNU_GetStringNativeChars(env, name);
+  char *value_8 = JNU_GetStringNativeChars(env, value);
+
+  return setenv(name_8, value_8, 1);
+}
+
 JNIEXPORT jobject JNICALL Java_com_google_ase_Exec_createSubprocess(
     JNIEnv* env, jclass clazz, jstring cmd, jstring arg0, jstring arg1,
     jintArray processIdArray) {

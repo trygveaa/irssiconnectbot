@@ -25,19 +25,19 @@ JNIEXPORT void JNICALL Java_com_google_ase_Exec_setPtyWindowSize
 
 /*
  * Class:     com_google_ase_Exec
+ * Method:    setenv
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_com_google_ase_Exec_setenv
+  (JNIEnv *, jclass, jstring, jstring);
+
+/*
+ * Class:     com_google_ase_Exec
  * Method:    waitFor
  * Signature: (I)I
  */
 JNIEXPORT jint JNICALL Java_com_google_ase_Exec_waitFor
   (JNIEnv *, jclass, jint);
-
-/*
- * Class:     com_google_ase_Exec
- * Method:    register
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_com_google_ase_Exec_register
-  (JNIEnv *, jclass);
 
 #ifdef __cplusplus
 }

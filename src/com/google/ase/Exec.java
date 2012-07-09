@@ -54,6 +54,8 @@ public class Exec {
   public static native void setPtyWindowSize(FileDescriptor fd, int row, int col, int xpixel,
       int ypixel);
 
+  public static native int setenv(String name, String value);
+
   /**
    * Causes the calling thread to wait for the process associated with the receiver to finish
    * executing.
