@@ -63,9 +63,10 @@ Compiling
 
 local.properties:
 
- To compile ConnectBot using Ant, you must specify where your Android SDK is via the local.properties file. Insert a line similar to the following with the full path to your SDK:
+ To compile ConnectBot using Ant, you must specify where your Android SDK and NDK is via the local.properties file. Insert a line similar to the following with the full path to your SDK/NDK:
 
  sdk.dir=/usr/local/android
+ ndk.dir=/usr/local/android-ndk
 
  Also indicate the key store and key (by alias) with a full path, signing apk is essentially mandatory for the emulator and actual phones. Example:
 

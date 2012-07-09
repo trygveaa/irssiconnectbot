@@ -112,7 +112,9 @@
         <fail unless="have.proguard">You requested ProGuard, but you don't have the JAR available! See README</fail>
     </target>
 
-    <target name="-pre-build" depends="create-out-dir, link-out-dir, update-version"/>
+    <target name="-pre-build" depends="create-out-dir, link-out-dir, update-version">
+        <exec executable="${ndk.dir}/ndk-build" failonerror="true"/>
+    </target>
 
     <target name="-post-compile" depends="proguard-execute"/>
 
@@ -211,6 +213,9 @@
                 </subant>
             </then>
         </if>
+	<exec executable="${ndk.dir}/ndk-build" failonerror="true">
+	  <arg value="clean"/>
+	</exec>
     </target>
 
     <target name="tests" depends="install">
