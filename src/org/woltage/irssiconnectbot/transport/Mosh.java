@@ -280,6 +280,12 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
 	}
 
 	@Override
+	public void connectionLost(Throwable reason) {
+                if(!sshDone)
+                        onDisconnect();
+	}
+
+	@Override
 	public boolean isSessionOpen() {
                 if(sshDone) {
                         return is != null && os != null;
@@ -423,6 +429,11 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
 
 	@Override
 	public boolean usesNetwork() {
-		return false; // TODO - prevents closing on ip changing
+		return true;
 	}
+
+	@Override
+        public boolean resetOnConnectionChange() {
+                return false;
+        }
 }

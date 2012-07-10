@@ -251,4 +251,6 @@ public abstract class AbsTransport {
 	 * @return
 	 */
 	public abstract boolean usesNetwork();
+
+        public abstract boolean resetOnConnectionChange();
 }

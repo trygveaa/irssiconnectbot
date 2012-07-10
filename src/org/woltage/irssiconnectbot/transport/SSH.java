@@ -954,4 +954,9 @@ public class SSH extends AbsTransport implements ConnectionMonitor, InteractiveC
 	public boolean usesNetwork() {
 		return true;
 	}
+
+	@Override
+        public boolean resetOnConnectionChange() {
+                return true;
+        }
 }

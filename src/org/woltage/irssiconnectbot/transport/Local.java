@@ -216,4 +216,9 @@ public class Local extends AbsTransport {
 	public boolean usesNetwork() {
 		return false;
 	}
+
+	@Override
+        public boolean resetOnConnectionChange() {
+                return false;
+        }
 }

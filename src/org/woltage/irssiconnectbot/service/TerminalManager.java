@@ -212,8 +212,9 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 		if (tmpBridges != null) {
 			// disconnect and dispose of any existing bridges
 			for (int i = 0; i < tmpBridges.length; i++) {
-                                if(tmpBridges[i].transport.usesNetwork() || !onlyRemote)
+                                if(tmpBridges[i].transport.resetOnConnectionChange() || !onlyRemote) {
                                         tmpBridges[i].dispatchDisconnect(immediate);
+                                }
                         }
 		}
 	}
