@@ -27,6 +27,7 @@ import org.woltage.irssiconnectbot.transport.TransportFactory;
 import org.woltage.irssiconnectbot.util.HostDatabase;
 import org.woltage.irssiconnectbot.util.PreferenceConstants;
 import org.woltage.irssiconnectbot.util.UpdateHelper;
+import org.woltage.irssiconnectbot.util.InstallMosh;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -166,7 +167,7 @@ public class HostListActivity extends ListActivity {
 				getResources().getText(R.string.app_name),
 				getResources().getText(R.string.title_hosts_list)));
 
-        BugSenseHandler.setup(this, "f18d0d05");
+                BugSenseHandler.setup(this, "f18d0d05");
 
 		ExceptionHandler.register(this);
 
@@ -179,7 +180,10 @@ public class HostListActivity extends ListActivity {
 		}
 
 		// start thread to check for new version
-		new UpdateHelper(this);
+		//new UpdateHelper(this);
+
+                // install Mosh binaries
+                new InstallMosh(this);
 
 		this.makingShortcut = Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction())
 								|| Intent.ACTION_PICK.equals(getIntent().getAction());

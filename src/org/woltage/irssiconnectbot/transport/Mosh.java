@@ -34,8 +34,8 @@ import org.woltage.irssiconnectbot.R;
 import org.woltage.irssiconnectbot.bean.HostBean;
 import org.woltage.irssiconnectbot.service.TerminalBridge;
 import org.woltage.irssiconnectbot.service.TerminalManager;
+import org.woltage.irssiconnectbot.util.InstallMosh;
 
-import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
@@ -45,12 +45,14 @@ import com.trilead.ssh2.Connection;
 import com.trilead.ssh2.ConnectionMonitor;
 import com.trilead.ssh2.InteractiveCallback;
 import com.trilead.ssh2.Session;
+import com.trilead.ssh2.ServerHostKeyVerifier;
 
 import com.google.ase.Exec;
 
 public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback, AuthAgentCallback {
         private String moshPort, moshKey, moshIP;
         private boolean sshDone = false;
+        private Integer moshPid;
 
 	private FileDescriptor shellFd;
 
@@ -90,6 +92,13 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
 
                 if(connected)
                         super.close();
+
+                if(moshPid != null) {
+                        synchronized(moshPid) { 
+                                if(moshPid > 0)
+                                        Exec.kill(moshPid, 15); // SIGTERM
+                        }
+                }
 	}
 
 	/**
@@ -119,8 +128,41 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
 		}
 	}
 
+        // use this class to pass the actual hostname to the actual HostKeyVerifier, otherwise it gets the raw IP
+	public class MoshHostKeyVerifier extends HostKeyVerifier implements ServerHostKeyVerifier {
+                String realHostname;
+                public MoshHostKeyVerifier(String hostname) {
+                        realHostname = hostname;
+                }
+
+		public boolean verifyServerHostKey(String hostname, int port,
+				String serverHostKeyAlgorithm, byte[] serverHostKey) throws IOException {
+                        return super.verifyServerHostKey(realHostname, port, serverHostKeyAlgorithm, serverHostKey);
+                }
+        }
+
 	@Override
 	public void connect() {
+                if(!InstallMosh.isInstallStarted()) {
+                        // check that InstallMosh was called by the Activity
+			bridge.outputLine("mosh-client binary install not started");
+                        onDisconnect();
+                        return;
+                }
+                if(!InstallMosh.isInstallDone()) {
+                        bridge.outputLine("waiting for mosh binaries to install");
+                        InstallMosh.waitForInstall();
+                }
+
+                if(!InstallMosh.getMoshInstallStatus()) {
+			bridge.outputLine("mosh-client binary not found; install process failed");
+                        bridge.outputLine(InstallMosh.getInstallMessages());
+                        onDisconnect();
+                        return;
+                }
+
+                bridge.outputLine(InstallMosh.getInstallMessages());
+
                 InetAddress addresses[];
                 try {
                         addresses = InetAddress.getAllByName(host.getHostname());
@@ -168,7 +210,7 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
 		}
 
 		try {
-			connectionInfo = connection.connect(new HostKeyVerifier());
+			connectionInfo = connection.connect(new MoshHostKeyVerifier(host.getHostname()));
 			connected = true;
 
 			if (connectionInfo.clientToServerCryptoAlgorithm
@@ -221,6 +263,15 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
 		return PROTOCOL;
 	}
 
+	@Override
+	public String getDefaultNickname(String username, String hostname, int port) {
+		if (port == DEFAULT_PORT) {
+			return String.format("mosh %s@%s", username, hostname);
+		} else {
+			return String.format("mosh %s@%s:%d", username, hostname, port);
+		}
+	}
+
 	public static Uri getUri(String input) {
 		Matcher matcher = hostmask.matcher(input);
 
@@ -228,12 +279,17 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
 			return null;
 
 		StringBuilder sb = new StringBuilder();
+		StringBuilder nickname = new StringBuilder();
+
+                String username = matcher.group(1);
+                String hostname = matcher.group(2);
 
 		sb.append(getProtocolName())
 			.append("://")
-			.append(Uri.encode(matcher.group(1)))
+			.append(Uri.encode(username))
 			.append('@')
-			.append(matcher.group(2));
+			.append(hostname);
+                nickname.append("mosh "+username+"@"+hostname);
 
 		String portString = matcher.group(4);
 		int port = DEFAULT_PORT;
@@ -251,10 +307,11 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
 		if (port != DEFAULT_PORT) {
 			sb.append(':')
 				.append(port);
+                        nickname.append(":"+port);
 		}
 
 		sb.append("/#")
-			.append(Uri.encode(input));
+			.append(Uri.encode(nickname.toString()));
 
 		Uri uri = Uri.parse(sb.toString());
 
@@ -300,20 +357,24 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
                 Exec.setenv("MOSH_KEY", moshKey);
                 Exec.setenv("TERM", getEmulation());
 		try {
-			shellFd = Exec.createSubprocess("/data/local/bin/mosh-client", moshIP, moshPort, pids);
+			shellFd = Exec.createSubprocess(InstallMosh.getMoshPath(), moshIP, moshPort, pids);
                         Exec.setPtyWindowSize(shellFd, rows, columns, width, height);
 		} catch (Exception e) {
 			bridge.outputLine("failed to start mosh-client: "+e.toString());
 			Log.e(TAG, "Cannot start mosh-client", e);
+                        onDisconnect();
 			return;
                 } finally {
                         Exec.setenv("MOSH_KEY","");
                 }
 
-		final int shellPid = pids[0];
+		moshPid = pids[0];
 		Runnable exitWatcher = new Runnable() {
 			public void run() {
-				Exec.waitFor(shellPid);
+				Exec.waitFor(moshPid);
+                                synchronized(moshPid) { 
+                                        moshPid = 0;
+                                };
 
 				bridge.dispatchDisconnect(false);
 			}
