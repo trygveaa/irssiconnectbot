@@ -124,12 +124,12 @@ public final class InstallMosh implements Runnable {
 
     private boolean installMosh() {
         File mosh_client_path = new File(moshPath);
-        File tar_path = new File(bindir, "tar");
+        File busybox_path = new File(bindir, "busybox");
         if(!mosh_client_path.exists()) {
             installMessage.append("installing mosh-client binary\r\n");
             try {
                 InputStream bin_tar = context.getResources().openRawResource(R.raw.data);
-                Process untar = Runtime.getRuntime().exec(tar_path.getPath()+" -C "+data_dir+" -zxf -");
+                Process untar = Runtime.getRuntime().exec(busybox_path.getPath()+" tar -C "+data_dir+" -zxf -");
                 OutputStream tar_out = untar.getOutputStream();
                 InputStream stdout = untar.getInputStream();
                 InputStream stderr = untar.getErrorStream();
@@ -188,23 +188,21 @@ public final class InstallMosh implements Runnable {
                 return false;
             }
             try {
-                Process process = Runtime.getRuntime().exec("/system/bin/chmod 755 "+busybox_path.getPath());
+                File chmod_bin = new File("/system/bin/chmod");
+                if(!chmod_bin.exists()) {
+                    chmod_bin = new File("/system/xbin/chmod");
+                    if(!chmod_bin.exists()) {
+                        installMessage.append("mosh binary install failed/chmod: unable to find chmod\r\n");
+                        return false;
+                    }
+                }
+                Process process = Runtime.getRuntime().exec(chmod_bin.getPath()+" 755 "+busybox_path.getPath());
                 if(process.waitFor() > 0) {
                     installMessage.append("mosh binary install failed/chmod: exit status != 0\r\n");
                     return false;
                 }
             } catch (Exception e) {
                 installMessage.append("mosh binary install failed/chmod: "+e.toString()+"\r\n");
-                return false;
-            }
-            try {
-                Process process = Runtime.getRuntime().exec(busybox_path.getPath()+" --install "+bindir.getPath());
-                if(process.waitFor() > 0) {
-                    installMessage.append("mosh binary install failed/busybox-install: exit status != 0\r\n");
-                    return false;
-                }
-            } catch (Exception e) {
-                installMessage.append("mosh binary install failed/busybox-install: "+e.toString()+"\r\n");
                 return false;
             }
             installMessage.append("busybox written\r\n");
