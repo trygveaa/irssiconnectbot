@@ -56,6 +56,8 @@ public class Exec {
 
   public static native int setenv(String name, String value);
 
+  public static native int kill(int pid, int signal);
+
   /**
    * Causes the calling thread to wait for the process associated with the receiver to finish
    * executing.

@@ -33,6 +33,14 @@ JNIEXPORT jint JNICALL Java_com_google_ase_Exec_setenv
 
 /*
  * Class:     com_google_ase_Exec
+ * Method:    kill
+ * Signature: (II)I
+ */
+JNIEXPORT jint JNICALL Java_com_google_ase_Exec_kill
+  (JNIEnv *, jclass, jint, jint);
+
+/*
+ * Class:     com_google_ase_Exec
  * Method:    waitFor
  * Signature: (I)I
  */
