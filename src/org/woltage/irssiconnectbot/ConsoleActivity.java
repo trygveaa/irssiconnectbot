@@ -87,7 +87,7 @@ public class ConsoleActivity extends Activity {
 	public final static String TAG = "ConnectBot.ConsoleActivity";
 
 	protected static final int REQUEST_EDIT = 1;
-    protected static final int REQUEST_SELECT = 2;
+        protected static final int REQUEST_SELECT = 2;
 
 	protected static final int CLICK_TIME = 400;
 	protected static final float MAX_CLICK_DISTANCE = 25f;
@@ -280,7 +280,7 @@ public class ConsoleActivity extends Activity {
 		hardKeyboard = getResources().getConfiguration().keyboard ==
 				Configuration.KEYBOARD_QWERTY;
 
-        hardKeyboard = hardKeyboard && !Build.MODEL.startsWith("Transformer");
+                hardKeyboard = hardKeyboard && !Build.MODEL.startsWith("Transformer");
 
 		this.setContentView(R.layout.act_console);
         	BugSenseHandler.setup(this, "d27a12dc");
@@ -291,7 +291,7 @@ public class ConsoleActivity extends Activity {
 
 		// hide action bar if requested by user
 		try {
-            ActionBar actionBar = getActionBar();
+                        ActionBar actionBar = getActionBar();
 			if (!prefs.getBoolean(PreferenceConstants.ACTIONBAR, true)) {
 				actionBar.hide();
 			}
@@ -381,12 +381,12 @@ public class ConsoleActivity extends Activity {
 
 		final RelativeLayout keyboardGroup = (RelativeLayout) findViewById(R.id.keyboard_group);
         
-        if(Build.MODEL.startsWith("Transformer") &&
-           getResources().getConfiguration().keyboard == Configuration.KEYBOARD_QWERTY &&
-           prefs.getBoolean(PreferenceConstants.ACTIONBAR, true)) {
-                keyboardGroup.setEnabled(false);
-                keyboardGroup.setVisibility(View.INVISIBLE);
-        }
+                if(Build.MODEL.startsWith("Transformer") &&
+                                getResources().getConfiguration().keyboard == Configuration.KEYBOARD_QWERTY &&
+                                prefs.getBoolean(PreferenceConstants.ACTIONBAR, true)) {
+                        keyboardGroup.setEnabled(false);
+                        keyboardGroup.setVisibility(View.INVISIBLE);
+                }
 
 		mKeyboardButton = (ImageView) findViewById(R.id.button_keyboard);
 		mKeyboardButton.setOnClickListener(new OnClickListener() {
@@ -523,7 +523,7 @@ public class ConsoleActivity extends Activity {
 
         MenuItem ctrlKey = menu.add("Ctrl");
         ctrlKey.setEnabled(activeTerminal);
-        ctrlKey.setIcon(R.drawable.button_ctrl)         ;
+        ctrlKey.setIcon(R.drawable.button_ctrl);
         ctrlKey.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         ctrlKey.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
@@ -769,18 +769,18 @@ public class ConsoleActivity extends Activity {
 			}
 		});
 
-        MenuItem keys = menu.add(R.string.console_menu_pubkeys);
-        keys.setIcon(android.R.drawable.ic_lock_lock);
-        keys.setIntent(new Intent(this, PubkeyListActivity.class));
-        keys.setEnabled(activeTerminal);
-        keys.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                Intent intent = new Intent(ConsoleActivity.this, PubkeyListActivity.class);
-                intent.putExtra(PubkeyListActivity.PICK_MODE, true);
-                ConsoleActivity.this.startActivityForResult(intent, REQUEST_SELECT);
-                return true;
-            }
-        });
+                MenuItem keys = menu.add(R.string.console_menu_pubkeys);
+                keys.setIcon(android.R.drawable.ic_lock_lock);
+                keys.setIntent(new Intent(this, PubkeyListActivity.class));
+                keys.setEnabled(activeTerminal);
+                keys.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Intent intent = new Intent(ConsoleActivity.this, PubkeyListActivity.class);
+                        intent.putExtra(PubkeyListActivity.PICK_MODE, true);
+                        ConsoleActivity.this.startActivityForResult(intent, REQUEST_SELECT);
+                        return true;
+                    }
+                });
 
 		return true;
 	}
