@@ -18,6 +18,7 @@ import com.trilead.ssh2.packets.PacketGlobalTrileadPing;
 import com.trilead.ssh2.packets.PacketOpenDirectTCPIPChannel;
 import com.trilead.ssh2.packets.PacketOpenSessionChannel;
 import com.trilead.ssh2.packets.PacketSessionExecCommand;
+import com.trilead.ssh2.packets.PacketSessionEnvironmentVariable;
 import com.trilead.ssh2.packets.PacketSessionPtyRequest;
 import com.trilead.ssh2.packets.PacketSessionPtyResize;
 import com.trilead.ssh2.packets.PacketSessionStartShell;
@@ -838,6 +839,41 @@ public class ChannelManager implements MessageHandler
 		catch (IOException e)
 		{
 			throw (IOException) new IOException("The execute request failed.").initCause(e);
+		}
+	}
+
+	public void requestEnvironmentSetting(Channel c, String name, String value) throws IOException
+	{
+		PacketSessionEnvironmentVariable envset;
+
+		synchronized (c)
+		{
+			if (c.state != Channel.STATE_OPEN)
+				throw new IOException("Cannot set environment on this channel (" + c.getReasonClosed() + ")");
+
+			envset = new PacketSessionEnvironmentVariable(c.remoteID, true, name, value);
+
+			c.successCounter = c.failedCounter = 0;
+		}
+
+		synchronized (c.channelSendLock)
+		{
+			if (c.closeMessageSent)
+				throw new IOException("Cannot set environment on this channel (" + c.getReasonClosed() + ")");
+			tm.sendMessage(envset.getPayload());
+		}
+
+		if (log.isEnabled())
+			log.log(50, "Setting env variable (channel " + c.localID + ", '" + name + "=" + value + "')");
+
+		try
+		{
+			if (waitForChannelRequestResult(c) == false)
+				throw new IOException("The server denied the request.");
+		}
+		catch (IOException e)
+		{
+			throw (IOException) new IOException("The environment setting failed.").initCause(e);
 		}
 	}
 

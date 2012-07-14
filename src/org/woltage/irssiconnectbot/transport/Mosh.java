@@ -114,6 +114,7 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
 			session = connection.openSession();
 
 			session.requestPTY("screen", 80, 25, 800, 600, null);
+                        session.sendEnvironment("LANG","en_US.UTF-8");
 			session.execCommand("mosh-server new -s");
 
 			stdin = session.getStdin();
@@ -490,7 +491,7 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
 
 	@Override
 	public boolean usesNetwork() {
-		return true;
+		return false; // don't hold wifilock
 	}
 
 	@Override

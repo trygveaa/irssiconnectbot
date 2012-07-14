@@ -279,6 +279,33 @@ public class Session
 		cm.requestExecCommand(cn, cmd);
 	}
 
+        /**
+         * Sends an environment variable
+         *
+         * @param name
+         *             The name of the environment variable
+         * @param value
+         *             The value of the environment variable
+         * @throws IOException
+         */
+        public void sendEnvironment(String name, String value) throws IOException
+        {
+                if(name == null)
+                        throw new IllegalArgumentException("name cannot be null");
+
+                synchronized (this)
+                {
+			/* The following is just a nicer error, we would catch it anyway later in the channel code */
+			if (flag_closed)
+				throw new IOException("This session is closed.");
+
+			if (flag_execution_started)
+				throw new IOException("Can't change the environment after execution has already started");
+                }
+
+                cm.requestEnvironmentSetting(cn, name, value);
+        }
+
 	/**
 	 * Start a shell on the remote machine.
 	 * 
