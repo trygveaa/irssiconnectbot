@@ -142,10 +142,10 @@
 			android:defaultValue="true"
 			/>
 
-		<!--org.woltage.irssiconnectbot.util.VolumePreference
+		<org.woltage.irssiconnectbot.util.VolumePreference
 			android:key="bellVolume"
 			android:title="@string/pref_bell_volume_title"
-			/-->
+			/>
 
 		<CheckBoxPreference
 			android:key="bellVibrate"
