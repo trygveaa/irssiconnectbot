@@ -56,6 +56,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
+import android.support.v4.view.MenuItemCompat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
@@ -524,7 +525,7 @@ public class ConsoleActivity extends Activity {
         MenuItem ctrlKey = menu.add("Ctrl");
         ctrlKey.setEnabled(activeTerminal);
         ctrlKey.setIcon(R.drawable.button_ctrl);
-        ctrlKey.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        MenuItemCompat.setShowAsAction(ctrlKey, MenuItem.SHOW_AS_ACTION_IF_ROOM);
         ctrlKey.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -543,7 +544,7 @@ public class ConsoleActivity extends Activity {
         MenuItem escKey = menu.add("Esc");
         escKey.setEnabled(activeTerminal);
         escKey.setIcon(R.drawable.button_esc);
-        escKey.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        MenuItemCompat.setShowAsAction(escKey, MenuItem.SHOW_AS_ACTION_IF_ROOM);
         escKey.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -562,7 +563,7 @@ public class ConsoleActivity extends Activity {
         MenuItem symKey = menu.add("SYM");
         symKey.setEnabled(activeTerminal);
         symKey.setIcon(R.drawable.button_sym);
-        symKey.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        MenuItemCompat.setShowAsAction(symKey, MenuItem.SHOW_AS_ACTION_IF_ROOM);
         symKey.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -580,7 +581,7 @@ public class ConsoleActivity extends Activity {
         MenuItem inputButton = menu.add("Input");
         inputButton.setEnabled(activeTerminal);
         inputButton.setIcon(R.drawable.button_input);
-        inputButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        MenuItemCompat.setShowAsAction(inputButton, MenuItem.SHOW_AS_ACTION_IF_ROOM);
         inputButton.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -605,7 +606,7 @@ public class ConsoleActivity extends Activity {
         MenuItem keyboard = menu.add("Show Keyboard");
         keyboard.setEnabled(activeTerminal);
         keyboard.setIcon(R.drawable.button_keyboard);
-        keyboard.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        MenuItemCompat.setShowAsAction(keyboard, MenuItem.SHOW_AS_ACTION_IF_ROOM);
         keyboard.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {

@@ -145,7 +145,7 @@
         <proguard configuration="proguard.flags" printusage="${out.dir}/proguard.usage">
             <injar path="${out.classes.absolute.dir}"/>
             <outjar path="${proguard.out.dir}"/>
-            <libraryjar path="${sdk.dir}/platforms/${target}/android.jar:libs/bugsense-trace-1-1.jar"/>
+            <libraryjar path="${sdk.dir}/platforms/${target}/android.jar:libs/bugsense-trace-1-1.jar:libs/android-support-v4.jar"/>
         </proguard>
     </target>
 
