@@ -274,6 +274,7 @@ public class ConsoleActivity extends Activity {
         } catch (ClassNotFoundException e) {
         }
     }
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -292,10 +293,12 @@ public class ConsoleActivity extends Activity {
 
         // hide action bar if requested by user
         try {
-                        ActionBar actionBar = getActionBar();
+            ActionBar actionBar = getActionBar();
             if (!prefs.getBoolean(PreferenceConstants.ACTIONBAR, true)) {
                 actionBar.hide();
             }
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayOptions(0,ActionBar.DISPLAY_SHOW_TITLE);
         } catch (NoSuchMethodError error) {
             Log.w(TAG, "Android sdk version pre 11. Not touching ActionBar.");
         }
@@ -824,6 +827,19 @@ public class ConsoleActivity extends Activity {
         super.onOptionsMenuClosed(menu);
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home: // someone hit the home icon on the actionbar
+                Intent intent = new Intent(this, HostListActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
