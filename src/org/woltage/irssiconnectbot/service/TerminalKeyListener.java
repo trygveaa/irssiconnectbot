@@ -270,12 +270,6 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                     key = keyAsControl(key);
                 }
 
-                // handle pressing f-keys
-                if ((hardKeyboard && !hardKeyboardHidden)
-                        && (curMetaState & KeyEvent.META_SHIFT_ON) != 0
-                        && sendFunctionKey(keyCode))
-                    return true;
-
                 if (key < 0x80) {
                     bridge.transport.write(key);
                 } else {
