@@ -24,13 +24,19 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.woltage.irssiconnectbot.R;
+import org.woltage.irssiconnectbot.util.PreferenceConstants;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 
 public final class InstallMosh implements Runnable {
     private File data_dir;
     private File bindir;
     private Context context;
+
+    private final static String BINARY_VERSION = "1.0";
 
     // using installMessage as the object to lock to access static properties
     private static StringBuilder installMessage = new StringBuilder();
@@ -125,7 +131,11 @@ public final class InstallMosh implements Runnable {
     private boolean installMosh() {
         File mosh_client_path = new File(moshPath);
         File busybox_path = new File(bindir, "busybox");
-        if(!mosh_client_path.exists()) {
+
+	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String moshVersion = prefs.getString(PreferenceConstants.INSTALLED_MOSH_VERSION, "");
+
+        if(!mosh_client_path.exists() || !moshVersion.equals(BINARY_VERSION)) {
             installMessage.append("installing mosh-client binary\r\n");
             try {
                 InputStream bin_tar = context.getResources().openRawResource(R.raw.data);
@@ -164,6 +174,9 @@ public final class InstallMosh implements Runnable {
                 return false;
             }
             installMessage.append("mosh-client binary done\r\n");
+            Editor edit = prefs.edit();
+            edit.putString(PreferenceConstants.INSTALLED_MOSH_VERSION, BINARY_VERSION);
+            edit.commit();
         }
         return true;
     }

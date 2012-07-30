@@ -253,4 +253,7 @@ public abstract class AbsTransport {
 	public abstract boolean usesNetwork();
 
         public abstract boolean resetOnConnectionChange();
+
+        public void onBackground() {}
+        public void onForeground() {}
 }

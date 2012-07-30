@@ -857,6 +857,14 @@ public class TerminalBridge implements VDUDisplay {
 		return transport.getPortForwards();
 	}
 
+        public void onBackground() {
+            transport.onBackground();
+        }
+
+        public void onForeground() {
+            transport.onForeground();
+        }
+
 	/**
 	 * Enables a port forward member. After calling this method, the port forward should
 	 * be operational.

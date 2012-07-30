@@ -83,6 +83,8 @@ public class PreferenceConstants {
 
 	public static final String CONNECTION_PERSIST = "connPersist";
 
+        public static final String INSTALLED_MOSH_VERSION = "moshVersion";
+
 	/* Backup identifiers */
 	public static final String BACKUP_PREF_KEY = "prefs";
 }

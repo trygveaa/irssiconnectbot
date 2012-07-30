@@ -525,6 +525,12 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 		Log.i(TAG, "Someone rebound to TerminalManager");
 
 		stopIdleTimer();
+
+		synchronized (bridges) {
+                    for (TerminalBridge bridge : bridges) {
+                        bridge.onForeground();
+                    }
+                }
 	}
 
 	@Override
@@ -533,9 +539,15 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 
 		setResizeAllowed(true);
 
-		if (bridges.size() == 0) {
-			stopWithDelay();
-		}
+		synchronized (bridges) {
+                    if (bridges.size() == 0) {
+                        stopWithDelay();
+                    } else {
+                        for (TerminalBridge bridge : bridges) {
+                            bridge.onBackground();
+                        }
+                    }
+                }
 
 		return true;
 	}

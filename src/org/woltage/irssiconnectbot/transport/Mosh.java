@@ -95,11 +95,31 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
 
                 if(moshPid != null) {
                         synchronized(moshPid) { 
-                                if(moshPid > 0)
-                                        Exec.kill(moshPid, 15); // SIGTERM
+                                if(moshPid > 0) {
+                                    Exec.kill(moshPid, 18); // SIGCONT in case it's stopped
+                                    Exec.kill(moshPid, 15); // SIGTERM
+                                }
                         }
                 }
 	}
+
+        public void onBackground() {
+            if(sshDone) {
+                synchronized(moshPid) {
+                    if(moshPid > 0)
+                        Exec.kill(moshPid, 19); // SIGSTOP
+                }
+            }
+        }
+        public void onForeground() {
+            if(sshDone) {
+                synchronized(moshPid) {
+                    if(moshPid > 0)
+                        Exec.kill(moshPid, 18); // SIGCONT
+                }
+            }
+        }
+
 
 	/**
 	 * Internal method to request actual PTY terminal once we've finished
