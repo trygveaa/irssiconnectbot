@@ -99,6 +99,18 @@
 		android:summary="@string/hostpref_encoding_summary"
 		/>
 	
+	<EditTextPreference
+		android:key="moshport"
+		android:title="@string/hostpref_moshport_title"
+		android:summary="@string/hostpref_moshport_summary"
+		/>
+
+	<EditTextPreference
+		android:key="locale"
+		android:title="@string/hostpref_locale_title"
+		android:summary="@string/hostpref_locale_summary"
+		/>
+
 	<PreferenceCategory
 		android:title="@string/hostpref_connection_category">
 		

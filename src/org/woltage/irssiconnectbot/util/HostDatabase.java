@@ -47,7 +47,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 	public final static String TAG = "ConnectBot.HostDatabase";
 
 	public final static String DB_NAME = "hosts";
-	public final static int DB_VERSION = 22;
+	public final static int DB_VERSION = 23;
 
 	public final static String TABLE_HOSTS = "hosts";
 	public final static String FIELD_HOST_NICKNAME = "nickname";
@@ -69,6 +69,8 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 	public final static String FIELD_HOST_COMPRESSION = "compression";
 	public final static String FIELD_HOST_ENCODING = "encoding";
 	public final static String FIELD_HOST_STAYCONNECTED = "stayconnected";
+        public final static String FIELD_HOST_MOSHPORT = "moshport";
+        public final static String FIELD_HOST_LOCALE = "locale";
 
 	public final static String TABLE_PORTFORWARDS = "portforwards";
 	public final static String FIELD_PORTFORWARD_HOSTID = "hostid";
@@ -108,6 +110,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 	public final static String AUTHAGENT_YES = "yes";
 
 	public final static String ENCODING_DEFAULT = Charset.defaultCharset().name();
+        public final static String LOCALE_DEFAULT = "en_US.UTF-8";
 
 	public final static long PUBKEYID_NEVER = -2;
 	public final static long PUBKEYID_ANY = -1;
@@ -169,7 +172,10 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 				+ FIELD_HOST_WANTSESSION + " TEXT DEFAULT '" + Boolean.toString(true) + "', "
 				+ FIELD_HOST_COMPRESSION + " TEXT DEFAULT '" + Boolean.toString(false) + "', "
 				+ FIELD_HOST_ENCODING + " TEXT DEFAULT '" + ENCODING_DEFAULT + "', "
-				+ FIELD_HOST_STAYCONNECTED + " TEXT)");
+				+ FIELD_HOST_STAYCONNECTED + " TEXT"
+                                + FIELD_HOST_MOSHPORT + " INTEGER DEFAULT 0, "
+                                + FIELD_HOST_LOCALE + " TEXT DEFAULT '" + LOCALE_DEFAULT + "' "
+                                + ")");
 
 		db.execSQL("CREATE TABLE " + TABLE_PORTFORWARDS
 				+ " (_id INTEGER PRIMARY KEY, "
@@ -259,6 +265,11 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 			db.execSQL("DROP TABLE " + TABLE_COLOR_DEFAULTS);
 			db.execSQL(CREATE_TABLE_COLOR_DEFAULTS);
 			db.execSQL(CREATE_TABLE_COLOR_DEFAULTS_INDEX);
+                case 22:
+                        db.execSQL("ALTER TABLE " + TABLE_HOSTS
+                                        + " ADD COLUMN " + FIELD_HOST_MOSHPORT + " INTEGER DEFAULT 0");
+                        db.execSQL("ALTER TABLE " + TABLE_HOSTS
+                                        + " ADD COLUMN " + FIELD_HOST_LOCALE + " TEXT DEFAULT '" + LOCALE_DEFAULT + "'");
 		}
 	}
 
@@ -376,7 +387,9 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 			COL_FONTSIZE = c.getColumnIndexOrThrow(FIELD_HOST_FONTSIZE),
 			COL_COMPRESSION = c.getColumnIndexOrThrow(FIELD_HOST_COMPRESSION),
 			COL_ENCODING = c.getColumnIndexOrThrow(FIELD_HOST_ENCODING),
-			COL_STAYCONNECTED = c.getColumnIndexOrThrow(FIELD_HOST_STAYCONNECTED);
+			COL_STAYCONNECTED = c.getColumnIndexOrThrow(FIELD_HOST_STAYCONNECTED),
+                        COL_MOSHPORT = c.getColumnIndexOrThrow(FIELD_HOST_MOSHPORT),
+                        COL_LOCALE = c.getColumnIndexOrThrow(FIELD_HOST_LOCALE);
 
 
 		while (c.moveToNext()) {
@@ -400,6 +413,8 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 			host.setCompression(Boolean.valueOf(c.getString(COL_COMPRESSION)));
 			host.setEncoding(c.getString(COL_ENCODING));
 			host.setStayConnected(Boolean.valueOf(c.getString(COL_STAYCONNECTED)));
+                        host.setMoshPort(c.getInt(COL_MOSHPORT));
+                        host.setLocale(c.getString(COL_LOCALE));
 
 			hosts.add(host);
 		}

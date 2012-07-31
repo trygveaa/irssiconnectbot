@@ -134,8 +134,14 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
 			session = connection.openSession();
 
 			session.requestPTY("screen", 80, 25, 800, 600, null);
-                        session.sendEnvironment("LANG","en_US.UTF-8");
-			session.execCommand("mosh-server new -s");
+                        session.sendEnvironment("LANG",host.getLocale());
+
+                        String serverCommand = "mosh-server new -s";
+                        serverCommand += " -l LANG="+host.getLocale();
+                        if(host.getMoshPort() > 0) {
+                            serverCommand += " -p "+host.getMoshPort();
+                        }
+			session.execCommand(serverCommand);
 
 			stdin = session.getStdin();
 			stdout = session.getStdout();
