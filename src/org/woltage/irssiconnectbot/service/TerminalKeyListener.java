@@ -153,7 +153,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                 if (bridge.isDisconnected() || bridge.transport == null)
                     return false;
 
-                if (PreferenceConstants.KEYMODE_RIGHT.equals(keymode)) {
+/*                if (PreferenceConstants.KEYMODE_RIGHT.equals(keymode)) {
                     if (keyCode == KeyEvent.KEYCODE_ALT_RIGHT
                             && (metaState & META_SLASH) != 0) {
                         metaState &= ~(META_SLASH | META_TRANSIENT);
@@ -177,7 +177,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                         bridge.transport.write(0x09);
                         return true;
                     }
-                }
+                } */
 
                 return false;
             }
@@ -361,7 +361,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                     return true;
                 }
 
-                if (PreferenceConstants.KEYMODE_RIGHT.equals(keymode)) {
+/*                if (PreferenceConstants.KEYMODE_RIGHT.equals(keymode)) {
                     switch (keyCode) {
                     case KeyEvent.KEYCODE_ALT_RIGHT:
                         metaState |= META_SLASH;
@@ -391,7 +391,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                         metaPress(META_ALT_ON);
                         return true;
                     }
-                } else {
+                } else { */
                     switch (keyCode) {
                     case KeyEvent.KEYCODE_ALT_LEFT:
                     case KeyEvent.KEYCODE_ALT_RIGHT:
@@ -401,8 +401,12 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                     case KeyEvent.KEYCODE_SHIFT_RIGHT:
                         metaPress(META_SHIFT_ON);
                         return true;
+                    case KeyEvent.KEYCODE_CTRL_LEFT:
+                    case KeyEvent.KEYCODE_CTRL_RIGHT:
+                        metaPress(META_CTRL_ON);
+                        return true;
                     }
-                }
+                //}
             }
 
             //Handle d-pad arrows in copy mode
