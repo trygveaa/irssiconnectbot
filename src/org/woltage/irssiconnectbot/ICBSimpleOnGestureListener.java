@@ -18,11 +18,16 @@
 package org.woltage.irssiconnectbot;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import de.mud.terminal.vt320;
 
 class ICBSimpleOnGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -160,6 +165,57 @@ class ICBSimpleOnGestureListener extends GestureDetector.SimpleOnGestureListener
 
 			terminal.bridge.tryKeyVibrate();
 
+			if (e.getX() > flip.getWidth() * 0.9) { // on the right side of the screen, use irssi channel switch menu
+				final String[] items = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "X" };
+
+				final Dialog irssiSwitchDialog = new Dialog(consoleActivity);
+				irssiSwitchDialog.setTitle("switch to irssi window");
+
+				GridView irssiSwitchGridView = new GridView(consoleActivity);
+				irssiSwitchGridView.setOnItemClickListener(new OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+						irssiSwitchDialog.dismiss();
+						View flip = consoleActivity.findCurrentView(R.id.console_flip);
+						if (flip == null) return;
+						char c;
+						if (position < 9)
+							c = (char) (49 + position);
+						else if (position == 9)
+							c = '0';
+						else {
+							switch (position) {
+							case 10: c = 'q'; break;
+							case 11: c = 'w'; break;
+							case 12: c = 'e'; break;
+							case 13: c = 'r'; break;
+							case 14: c = 't'; break;
+							case 15: c = 'y'; break;
+							case 16: c = 'u'; break;
+							case 17: c = 'i'; break;
+							case 18: c = 'o'; break;
+							case 19: c = 'c'; break; // close window
+							default: return;
+							}
+						}
+						TerminalView terminal = (TerminalView) flip;
+						((vt320) terminal.bridge.buffer).keyTyped(vt320.KEY_ESCAPE, ' ', 0);
+						((vt320) terminal.bridge.buffer).write(c);
+						terminal.bridge.tryKeyVibrate();
+					}
+				});
+
+				irssiSwitchGridView.setNumColumns(5);
+				irssiSwitchGridView.setHorizontalSpacing(-1);
+				irssiSwitchGridView.setVerticalSpacing(-1);
+				irssiSwitchGridView.setAdapter(new ArrayAdapter<String>(consoleActivity, R.layout.item_irssi_channel_switch, items));
+				irssiSwitchDialog.setContentView(irssiSwitchGridView);
+				irssiSwitchDialog.show();
+
+				return;
+			}
+
+			// regular menu
 			final CharSequence[] items = { "Alt", "Alt+c", "TAB", "Ctrl+a", "Ctrl+a+d", "Ctrl+d", "Ctrl+c" };
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(consoleActivity);
