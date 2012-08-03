@@ -283,7 +283,7 @@ public class ConsoleActivity extends Activity {
         hardKeyboard = getResources().getConfiguration().keyboard ==
                 Configuration.KEYBOARD_QWERTY;
 
-                hardKeyboard = hardKeyboard && !Build.MODEL.startsWith("Transformer");
+                hardKeyboard = hardKeyboard && !Build.MODEL.contains("Transformer");
 
         this.setContentView(R.layout.act_console);
             BugSenseHandler.setup(this, "d27a12dc");
