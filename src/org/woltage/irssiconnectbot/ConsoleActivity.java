@@ -640,7 +640,7 @@ public class ConsoleActivity extends Activity {
 
                 bridge.dispatchDisconnect(true);
 
-                if( bound != null ) {
+                if( bound != null && prefs.getBoolean("unloadKeysOnDisconnect", true)) {
                     bound.lockUnusedKeys();
                 }
                 return true;

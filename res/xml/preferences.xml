@@ -26,6 +26,12 @@
 		android:summary="@string/pref_memkeys_summary"
 		android:defaultValue="true"
 		/>
+	<CheckBoxPreference
+		android:key="unloadKeysOnDisconnect"
+		android:title="@string/pref_unloadondisconnect_title"
+		android:summary="@string/pref_unloadondisconnect_summary"
+		android:defaultValue="true"
+		/>
 
 	<ListPreference
 		android:key="update"
