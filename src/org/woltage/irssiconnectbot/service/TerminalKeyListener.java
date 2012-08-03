@@ -143,42 +143,8 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         try {
             final boolean hardKeyboardHidden = manager.hardKeyboardHidden;
-            // Ignore all key-up events except for the special keys
+            // Ignore all key-up events
             if (event.getAction() == KeyEvent.ACTION_UP) {
-                // There's nothing here for virtual keyboard users.
-                if (!hardKeyboard || (hardKeyboard && hardKeyboardHidden))
-                    return false;
-
-                // skip keys if we aren't connected yet or have been disconnected
-                if (bridge.isDisconnected() || bridge.transport == null)
-                    return false;
-
-/*                if (PreferenceConstants.KEYMODE_RIGHT.equals(keymode)) {
-                    if (keyCode == KeyEvent.KEYCODE_ALT_RIGHT
-                            && (metaState & META_SLASH) != 0) {
-                        metaState &= ~(META_SLASH | META_TRANSIENT);
-                        bridge.transport.write('/');
-                        return true;
-                    } else if (keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT
-                            && (metaState & META_TAB) != 0) {
-                        metaState &= ~(META_TAB | META_TRANSIENT);
-                        bridge.transport.write(0x09);
-                        return true;
-                    }
-                } else if (PreferenceConstants.KEYMODE_LEFT.equals(keymode)) {
-                    if (keyCode == KeyEvent.KEYCODE_ALT_LEFT
-                            && (metaState & META_SLASH) != 0) {
-                        metaState &= ~(META_SLASH | META_TRANSIENT);
-                        bridge.transport.write('/');
-                        return true;
-                    } else if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT
-                            && (metaState & META_TAB) != 0) {
-                        metaState &= ~(META_TAB | META_TRANSIENT);
-                        bridge.transport.write(0x09);
-                        return true;
-                    }
-                } */
-
                 return false;
             }
 
@@ -216,11 +182,6 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
             }
 
             int key = event.getUnicodeChar(curMetaState);
-            // no hard keyboard?  ALT-k should pass through to below
-//          if ((orgMetaState & KeyEvent.META_ALT_ON) != 0 &&
-//                  (!hardKeyboard || hardKeyboardHidden)) {
-//              key = 0;
-//          }
 
             if ((key & KeyCharacterMap.COMBINING_ACCENT) != 0) {
                 mDeadKey = key & KeyCharacterMap.COMBINING_ACCENT_MASK;
@@ -361,52 +322,20 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                     return true;
                 }
 
-/*                if (PreferenceConstants.KEYMODE_RIGHT.equals(keymode)) {
-                    switch (keyCode) {
-                    case KeyEvent.KEYCODE_ALT_RIGHT:
-                        metaState |= META_SLASH;
-                        return true;
-                    case KeyEvent.KEYCODE_SHIFT_RIGHT:
-                        metaState |= META_TAB;
-                        return true;
-                    case KeyEvent.KEYCODE_SHIFT_LEFT:
-                        metaPress(META_SHIFT_ON);
-                        return true;
-                    case KeyEvent.KEYCODE_ALT_LEFT:
-                        metaPress(META_ALT_ON);
-                        return true;
-                    }
-                } else if (PreferenceConstants.KEYMODE_LEFT.equals(keymode)) {
-                    switch (keyCode) {
-                    case KeyEvent.KEYCODE_ALT_LEFT:
-                        metaState |= META_SLASH;
-                        return true;
-                    case KeyEvent.KEYCODE_SHIFT_LEFT:
-                        metaState |= META_TAB;
-                        return true;
-                    case KeyEvent.KEYCODE_SHIFT_RIGHT:
-                        metaPress(META_SHIFT_ON);
-                        return true;
-                    case KeyEvent.KEYCODE_ALT_RIGHT:
-                        metaPress(META_ALT_ON);
-                        return true;
-                    }
-                } else { */
-                    switch (keyCode) {
-                    case KeyEvent.KEYCODE_ALT_LEFT:
-                    case KeyEvent.KEYCODE_ALT_RIGHT:
-                        metaPress(META_ALT_ON);
-                        return true;
-                    case KeyEvent.KEYCODE_SHIFT_LEFT:
-                    case KeyEvent.KEYCODE_SHIFT_RIGHT:
-                        metaPress(META_SHIFT_ON);
-                        return true;
-                    case KeyEvent.KEYCODE_CTRL_LEFT:
-                    case KeyEvent.KEYCODE_CTRL_RIGHT:
-                        metaPress(META_CTRL_ON);
-                        return true;
-                    }
-                //}
+                switch (keyCode) {
+                case KeyEvent.KEYCODE_ALT_LEFT:
+                case KeyEvent.KEYCODE_ALT_RIGHT:
+                    metaPress(META_ALT_ON);
+                    return true;
+                case KeyEvent.KEYCODE_SHIFT_LEFT:
+                case KeyEvent.KEYCODE_SHIFT_RIGHT:
+                    metaPress(META_SHIFT_ON);
+                    return true;
+                case KeyEvent.KEYCODE_CTRL_LEFT:
+                case KeyEvent.KEYCODE_CTRL_RIGHT:
+                    metaPress(META_CTRL_ON);
+                    return true;
+                }
             }
 
             //Handle d-pad arrows in copy mode
@@ -453,6 +382,8 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
             // look for special chars
             switch(keyCode) {
             case KEYCODE_ESCAPE:
+                sendEscape();
+                return true;
             case KeyEvent.KEYCODE_SEARCH:
                     if(prefs.getString("searchbutton", "urlscan").equals("tab")) {
                         bridge.transport.write(0x09);
