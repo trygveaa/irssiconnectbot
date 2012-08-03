@@ -276,6 +276,7 @@ public class ConsoleActivity extends Activity {
     }
 
     @Override
+	@TargetApi(11)
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         configureStrictMode();
