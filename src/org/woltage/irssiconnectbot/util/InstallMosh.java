@@ -27,16 +27,17 @@ import org.woltage.irssiconnectbot.R;
 import org.woltage.irssiconnectbot.util.PreferenceConstants;
 
 import android.content.Context;
-import android.preference.PreferenceManager;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
+import android.os.Build;
 
 public final class InstallMosh implements Runnable {
     private File data_dir;
     private File bindir;
     private Context context;
 
-    private final static String BINARY_VERSION = "1.0";
+    private final static String BINARY_VERSION = "1.1";
 
     // using installMessage as the object to lock to access static properties
     private static StringBuilder installMessage = new StringBuilder();
@@ -136,6 +137,25 @@ public final class InstallMosh implements Runnable {
         String moshVersion = prefs.getString(PreferenceConstants.INSTALLED_MOSH_VERSION, "");
 
         if(!mosh_client_path.exists() || !moshVersion.equals(BINARY_VERSION)) {
+            installMessage.append("installing linker\r\n");
+            String linkerPath;
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                linkerPath = bindir + "/linker-jb";
+            } else {
+                linkerPath = bindir + "/linker-ics";
+            }
+            installMessage.append("using linker at "+linkerPath+"\r\n");
+            try {
+                Process symlinkLinker = Runtime.getRuntime().exec(busybox_path.getPath()+" ln -sf "+linkerPath+" "+bindir+"/linker");
+                if(symlinkLinker.waitFor() > 0) {
+                    installMessage.append("linker failed: exit status != 0\r\n");
+                    return false;
+                }
+            } catch (Exception e) {
+                installMessage.append("linker binary install failed: "+e.toString()+"\r\n");
+                return false;
+            }
+            installMessage.append("linker done\r\n");
             installMessage.append("installing mosh-client binary\r\n");
             try {
                 InputStream bin_tar = context.getResources().openRawResource(R.raw.data);
