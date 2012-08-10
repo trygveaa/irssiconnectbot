@@ -134,7 +134,11 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
 			session = connection.openSession();
 
 			session.requestPTY("screen", 80, 25, 800, 600, null);
-                        session.sendEnvironment("LANG",host.getLocale());
+                        try {
+                            session.sendEnvironment("LANG",host.getLocale());
+                        } catch(IOException e) {
+                            bridge.outputLine("ssh rejected our LANG environment variable: "+e.getMessage());
+                        }
 
                         String serverCommand = "mosh-server new -s";
                         serverCommand += " -l LANG="+host.getLocale();
