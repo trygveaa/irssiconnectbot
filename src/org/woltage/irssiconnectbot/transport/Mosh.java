@@ -151,9 +151,10 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
 			stdout = session.getStdout();
 			stderr = session.getStderr();
 
-			sessionOpen = true;
+                        // means SSH session
+                        sessionOpen = true;
 
-			bridge.onConnected();
+                        bridge.onConnected(false);
 		} catch (IOException e1) {
 			Log.e(TAG, "Problem while trying to create PTY in finishConnection()", e1);
 		}
@@ -418,6 +419,8 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
 
 		is = new FileInputStream(shellFd);
 		os = new FileOutputStream(shellFd);
+
+                bridge.postLogin();
         }
 
 	@Override
