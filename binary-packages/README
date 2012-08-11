@@ -4,6 +4,7 @@ linker_2.3.4_r1_arm.ipk          - dynamic linker with a custom library path
 libgnustl-shared_ndk-r8_arm.ipk  - libgnustl library
 ncurses_5.9-2_arm.ipk            - libncurses library and support files
 protobuf_2.4.1_arm.ipk           - protobuf library
+openssl_1.0.0e_arm.ipk		 - openssl library
 mosh_ddrown-git2012.7.10_arm.ipk - mosh client
 
 They are built using the Android Ports environment - http://dan.drown.org/android/
@@ -13,7 +14,8 @@ linker           - https://github.com/ddrown/irssiconnectbot-linker
 libngustl-shared - https://github.com/ddrown/irssiconnectbot-libgnustl-shared + android NDK
 ncurses          - https://github.com/ddrown/irssiconnectbot-ncurses
 protobuf         - https://github.com/ddrown/irssiconnectbot-protobuf
-mosh             - https://github.com/ddrown/mosh/tree/android
+mosh             - https://github.com/ddrown/mosh/tree/android-unicode
+openssl		 - https://github.com/ddrown/irssiconnectbot-openssl
 
 busybox          - http://dan.drown.org/android/src/busybox/
 
