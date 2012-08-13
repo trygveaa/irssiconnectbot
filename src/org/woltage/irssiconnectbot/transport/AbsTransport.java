@@ -256,4 +256,6 @@ public abstract class AbsTransport {
 
         public void onBackground() {}
         public void onForeground() {}
+        public void onScreenOff() {}
+        public void onScreenOn() {}
 }

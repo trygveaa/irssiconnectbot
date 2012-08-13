@@ -34,8 +34,10 @@ import org.woltage.irssiconnectbot.util.PubkeyDatabase;
 import org.woltage.irssiconnectbot.util.PubkeyUtils;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.AssetFileDescriptor;
@@ -112,9 +114,35 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 
 	public boolean hardKeyboardHidden;
 
+        private BroadcastReceiver mScreenPowerReceiver;
+
+        private final class ScreenPowerReceiver extends BroadcastReceiver {
+            @Override
+            public void onReceive(final Context context, final Intent intent) {
+                if(intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                    synchronized (bridges) {
+                        for (TerminalBridge bridge : bridges) {
+                            bridge.onScreenOff();
+                        }
+                    }
+                } else if(intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                    synchronized (bridges) {
+                        for (TerminalBridge bridge : bridges) {
+                            bridge.onScreenOn();
+                        }
+                    }
+                }
+            }
+        }
+
 	@Override
 	public void onCreate() {
 		Log.i(TAG, "Starting background service");
+
+                IntentFilter screenPowerFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+                screenPowerFilter.addAction(Intent.ACTION_SCREEN_OFF);
+                mScreenPowerReceiver = new ScreenPowerReceiver();
+                registerReceiver(mScreenPowerReceiver, screenPowerFilter);
 
 		ExceptionHandler.register(this);
 
@@ -166,6 +194,8 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 	@Override
 	public void onDestroy() {
 		Log.i(TAG, "Destroying background service");
+
+                unregisterReceiver(mScreenPowerReceiver);
 
 		disconnectAll(true);
 

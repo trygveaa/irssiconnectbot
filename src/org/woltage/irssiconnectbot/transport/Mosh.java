@@ -61,6 +61,8 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
 	private static final String TAG = "ConnectBot.MOSH";
 	private static final int DEFAULT_PORT = 22;
 
+        private boolean stoppedForBackground = false;
+
 	public Mosh() {
 		super();
 	}
@@ -106,18 +108,38 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
                 synchronized(moshPid) {
                     if(moshPid > 0)
                         Exec.kill(moshPid, 19); // SIGSTOP
+                    stoppedForBackground = true;
                 }
             }
         }
+
         public void onForeground() {
             if(sshDone) {
                 synchronized(moshPid) {
                     if(moshPid > 0)
                         Exec.kill(moshPid, 18); // SIGCONT
+                    stoppedForBackground = false;
                 }
             }
         }
 
+        public void onScreenOff() {
+            if(sshDone) {
+                synchronized(moshPid) {
+                    if(moshPid > 0 && !stoppedForBackground)
+                        Exec.kill(moshPid, 19); // SIGSTOP
+                }
+            }
+        }
+
+        public void onScreenOn() {
+            if(sshDone) {
+                synchronized(moshPid) {
+                    if(moshPid > 0 && !stoppedForBackground)
+                        Exec.kill(moshPid, 18); // SIGCONT
+                }
+            }
+        }
 
 	/**
 	 * Internal method to request actual PTY terminal once we've finished
