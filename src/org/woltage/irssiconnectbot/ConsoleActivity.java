@@ -32,6 +32,7 @@ import org.woltage.irssiconnectbot.service.TerminalManager;
 import org.woltage.irssiconnectbot.util.PreferenceConstants;
 import org.woltage.irssiconnectbot.util.PubkeyDatabase;
 import org.woltage.irssiconnectbot.util.PubkeyUtils;
+import org.woltage.irssiconnectbot.util.InstallMosh;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -280,6 +281,11 @@ public class ConsoleActivity extends Activity {
     @TargetApi(11)
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+
+        if(!InstallMosh.isInstallStarted()) {
+            new InstallMosh(this);
+        }
+
         configureStrictMode();
         hardKeyboard = getResources().getConfiguration().keyboard ==
                 Configuration.KEYBOARD_QWERTY;
