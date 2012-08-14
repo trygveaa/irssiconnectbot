@@ -14,6 +14,6 @@ openssl		 - https://github.com/ddrown/irssiconnectbot-openssl
 
 busybox          - http://dan.drown.org/android/src/busybox/
 
-To build a package, setup your build environment
-(http://dan.drown.org/android/src/), checkout the source you want to rebuild,
-and run "opkg-buildirssi" in the source's directory
+To build a package, setup your build environment (https://github.com/ddrown/android-ports-tools),
+checkout the source you want to rebuild, and run "opkg-buildirssi" in the
+source's directory
