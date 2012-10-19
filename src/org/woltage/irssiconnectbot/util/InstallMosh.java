@@ -36,7 +36,7 @@ public final class InstallMosh implements Runnable {
     private File bindir;
     private Context context;
 
-    private final static String BINARY_VERSION = "1.3";
+    private final static String BINARY_VERSION = "1.4";
 
     // using installMessage as the object to lock to access static properties
     private static StringBuilder installMessage = new StringBuilder();
