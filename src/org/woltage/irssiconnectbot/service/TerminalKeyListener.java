@@ -181,28 +181,21 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                 curMetaState |= KeyEvent.META_ALT_ON;
             }
 
-            int key = event.getUnicodeChar(curMetaState);
+            int uchar = event.getUnicodeChar(curMetaState);
 
-            if ((key & KeyCharacterMap.COMBINING_ACCENT) != 0) {
-                mDeadKey = key & KeyCharacterMap.COMBINING_ACCENT_MASK;
+            if ((uchar & KeyCharacterMap.COMBINING_ACCENT) != 0) {
+                mDeadKey = uchar & KeyCharacterMap.COMBINING_ACCENT_MASK;
                 return true;
             }
 
             if (mDeadKey != 0) {
-                key = KeyCharacterMap.getDeadChar(mDeadKey, keyCode);
+                uchar = KeyCharacterMap.getDeadChar(mDeadKey, keyCode);
                 mDeadKey = 0;
             }
 
-            // Android keyboard kcm files map ENTER to '\n' (0xA), which is incorrect.
-            // A keyboard needs to send '\r' (0xD) when the ENTER butting is pressed.
-            // It may be converted to a different end-of-line sequence by a terminal program.
-            // Without this fix, many programs will misinterpret the key as ^J instead of RETURN.
-            // So just don't pass KEYCODE_ENTER directly, but handle it lateron manually
-            final boolean printing = (key != 0 && keyCode != KeyEvent.KEYCODE_ENTER);
-
             //Show up the CharacterPickerDialog when the SYM key is pressed
             if( (keyCode == KeyEvent.KEYCODE_SYM || keyCode == KeyEvent.KEYCODE_PICTSYMBOLS ||
-                    key == KeyCharacterMap.PICKER_DIALOG_INPUT) && v != null) {
+                    uchar == KeyCharacterMap.PICKER_DIALOG_INPUT) && v != null) {
                 showCharPickerDialog(v);
                 if ((metaState & META_ALT_ON) != 0) { // reset fn-key state
                     metaState &= ~META_ALT_ON;
@@ -213,7 +206,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 
             // otherwise pass through to existing session
             // print normal keys
-            if (printing) {
+            if (uchar >= 0x20) {
                 metaState &= ~(META_SLASH | META_TAB);
 
                 // Remove shift and alt modifiers
@@ -233,11 +226,11 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                             && sendFunctionKey(keyCode))
                         return true;
 
-                    key = keyAsControl(key);
+                    uchar = keyAsControl(uchar);
                 }
 
-                if (key < 0x80) {
-                    bridge.transport.write(key);
+                if (uchar < 0x80) {
+                    bridge.transport.write(uchar);
                 } else {
 
                     // HTC Desire Z fixes
@@ -251,41 +244,41 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                         if(curMetaState == 0) {
                             // Desire Z "All fixes (Æ = Alt, Ø = Ctrl)"
                             if(prefs.getString("htcDesireZfix", "false").equals("true")){ // Bind's Ø and ø to CTRL
-                                if(key == 0xd8 || key == 0xf8) {
+                                if(uchar == 0xd8 || uchar == 0xf8) {
                                     metaPress(META_CTRL_ON);
                                     bridge.redraw();
                                     return true;
-                                } else if(key == 0xc6 || key == 0xe6) { // Bind's Æ and æ to ALT
+                                } else if(uchar == 0xc6 || uchar == 0xe6) { // Bind's Æ and æ to ALT
                                     sendEscape();
                                     bridge.redraw();
                                     return true;
                                 }
                             }
                             // Desire Z, lowercase if curMetaState == 0! Problem with HW keymapping?
-                            if(key == 0xC4) //Ä
-                                key = 0xE4; //ä
-                            else if(key == 0xD6) //Ö
-                                key = 0xF6; //ö
-                            else if(key == 0xC5) //Å
-                                key = 0xE5; //å
-                            else if(key == 0xD8) //Ø
-                                key = 0xF8; //ø
-                            else if(key == 0xC6) //Æ
-                                key = 0xE6; //æ
+                            if(uchar == 0xC4) //Ä
+                                uchar = 0xE4; //ä
+                            else if(uchar == 0xD6) //Ö
+                                uchar = 0xF6; //ö
+                            else if(uchar == 0xC5) //Å
+                                uchar = 0xE5; //å
+                            else if(uchar == 0xD8) //Ø
+                                uchar = 0xF8; //ø
+                            else if(uchar == 0xC6) //Æ
+                                uchar = 0xE6; //æ
                         }
                         else if(curMetaState == 2) {
                             // Desire Z, <>| if FN pressed or locked
-                            if(key == 0xC4 || key == 0xE4) //Ä or ä
-                                key = 0x3C; //<
-                            else if(key == 0xD6 || key == 0xF6) //Ö or ö
-                                key = 0x3E; //>
-                            else if(key == 0xC5 || key == 0XE5) //Å or å
-                                key = 0x7C; //|
+                            if(uchar == 0xC4 || uchar == 0xE4) //Ä or ä
+                                uchar = 0x3C; //<
+                            else if(uchar == 0xD6 || uchar == 0xF6) //Ö or ö
+                                uchar = 0x3E; //>
+                            else if(uchar == 0xC5 || uchar == 0XE5) //Å or å
+                                uchar = 0x7C; //|
                         }
                     }
 
                     // TODO write encoding routine that doesn't allocate each time
-                    bridge.transport.write(new String(Character.toChars(key)).getBytes(encoding));
+                    bridge.transport.write(new String(Character.toChars(uchar)).getBytes(encoding));
                 }
 
                 return true;
