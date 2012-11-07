@@ -143,8 +143,42 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         try {
             final boolean hardKeyboardHidden = manager.hardKeyboardHidden;
-            // Ignore all key-up events
+            // Ignore all key-up events except for the special keys
             if (event.getAction() == KeyEvent.ACTION_UP) {
+                // There's nothing here for virtual keyboard users.
+                if (!hardKeyboard || (hardKeyboard && hardKeyboardHidden))
+                    return false;
+
+                // skip keys if we aren't connected yet or have been disconnected
+                if (bridge.isDisconnected() || bridge.transport == null)
+                    return false;
+
+                if (PreferenceConstants.KEYMODE_RIGHT.equals(keymode)) {
+                    if (keyCode == KeyEvent.KEYCODE_ALT_RIGHT
+                            && (metaState & META_SLASH) != 0) {
+                        metaState &= ~(META_SLASH | META_TRANSIENT);
+                        bridge.transport.write('/');
+                        return true;
+                    } else if (keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT
+                            && (metaState & META_TAB) != 0) {
+                        metaState &= ~(META_TAB | META_TRANSIENT);
+                        bridge.transport.write(0x09);
+                        return true;
+                    }
+                } else if (PreferenceConstants.KEYMODE_LEFT.equals(keymode)) {
+                    if (keyCode == KeyEvent.KEYCODE_ALT_LEFT
+                            && (metaState & META_SLASH) != 0) {
+                        metaState &= ~(META_SLASH | META_TRANSIENT);
+                        bridge.transport.write('/');
+                        return true;
+                    } else if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT
+                            && (metaState & META_TAB) != 0) {
+                        metaState &= ~(META_TAB | META_TRANSIENT);
+                        bridge.transport.write(0x09);
+                        return true;
+                    }
+                }
+
                 return false;
             }
 
@@ -312,6 +346,38 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
             // try handling keymode shortcuts
             if (hardKeyboard && !hardKeyboardHidden &&
                     event.getRepeatCount() == 0) {
+
+                if (PreferenceConstants.KEYMODE_RIGHT.equals(keymode)) {
+                    switch (keyCode) {
+                    case KeyEvent.KEYCODE_ALT_RIGHT:
+                        metaState |= META_SLASH;
+                        return true;
+                    case KeyEvent.KEYCODE_SHIFT_RIGHT:
+                        metaState |= META_TAB;
+                        return true;
+                    case KeyEvent.KEYCODE_SHIFT_LEFT:
+                        metaPress(META_SHIFT_ON);
+                        return true;
+                    case KeyEvent.KEYCODE_ALT_LEFT:
+                        metaPress(META_ALT_ON);
+                        return true;
+                    }
+                } else if (PreferenceConstants.KEYMODE_LEFT.equals(keymode)) {
+                    switch (keyCode) {
+                    case KeyEvent.KEYCODE_ALT_LEFT:
+                        metaState |= META_SLASH;
+                        return true;
+                    case KeyEvent.KEYCODE_SHIFT_LEFT:
+                        metaState |= META_TAB;
+                        return true;
+                    case KeyEvent.KEYCODE_SHIFT_RIGHT:
+                        metaPress(META_SHIFT_ON);
+                        return true;
+                    case KeyEvent.KEYCODE_ALT_RIGHT:
+                        metaPress(META_ALT_ON);
+                        return true;
+                    }
+                }
 
                 switch (keyCode) {
                 case KeyEvent.KEYCODE_ALT_LEFT:
@@ -626,10 +692,6 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
         bridge.redraw();
     }
 
-    public void setTerminalKeyMode(String keymode) {
-        this.keymode = keymode;
-    }
-
     private int getStateForBuffer() {
         int bufferState = 0;
 
@@ -663,7 +725,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
     }
 
     private void updateKeymode() {
-        keymode = prefs.getString(PreferenceConstants.KEYMODE, PreferenceConstants.KEYMODE_RIGHT);
+        keymode = prefs.getString(PreferenceConstants.KEYMODE, "");
     }
 
     public void setCharset(String encoding) {
