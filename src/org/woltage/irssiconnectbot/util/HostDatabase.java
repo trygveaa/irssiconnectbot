@@ -352,13 +352,19 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 	 * @param sortColors If true, sort by color, otherwise sort by nickname.
 	 */
 	public List<HostBean> getHosts(boolean sortColors) {
-		String sortField = sortColors ? FIELD_HOST_COLOR : FIELD_HOST_NICKNAME;
+		String sortField;
+		if (sortColors) {
+			sortField = FIELD_HOST_COLOR + " COLLATE NOCASE ASC, " + FIELD_HOST_NICKNAME + " COLLATE NOCASE ASC";
+		} else {
+			sortField = FIELD_HOST_NICKNAME + " COLLATE NOCASE ASC, " + FIELD_HOST_COLOR + " COLLATE NOCASE ASC";
+		}
+
 		List<HostBean> hosts;
 
 		synchronized (dbLock) {
 			SQLiteDatabase db = this.getReadableDatabase();
 
-			Cursor c = db.query(TABLE_HOSTS, null, null, null, null, null, sortField + " ASC");
+			Cursor c = db.query(TABLE_HOSTS, null, null, null, null, null, sortField);
 
 			hosts = createHostBeans(c);
 
