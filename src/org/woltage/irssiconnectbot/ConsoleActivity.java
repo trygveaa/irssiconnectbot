@@ -533,104 +533,6 @@ public class ConsoleActivity extends Activity {
 
         menu.setQwertyMode(true);
 
-        MenuItem ctrlKey = menu.add("Ctrl");
-        ctrlKey.setEnabled(activeTerminal);
-        ctrlKey.setIcon(R.drawable.button_ctrl);
-        MenuItemCompat.setShowAsAction(ctrlKey, MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        ctrlKey.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                View flip = findCurrentView(R.id.console_flip);
-                if (flip == null) return false;
-
-                TerminalView terminal = (TerminalView)flip;
-
-                TerminalKeyListener handler = terminal.bridge.getKeyHandler();
-                handler.metaPress(TerminalKeyListener.META_CTRL_ON);
-                terminal.bridge.tryKeyVibrate();
-                return true;
-            }
-        });
-
-        MenuItem escKey = menu.add("Esc");
-        escKey.setEnabled(activeTerminal);
-        escKey.setIcon(R.drawable.button_esc);
-        MenuItemCompat.setShowAsAction(escKey, MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        escKey.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                View flip = findCurrentView(R.id.console_flip);
-                if (flip == null) return false;
-
-                TerminalView terminal = (TerminalView)flip;
-
-                TerminalKeyListener handler = terminal.bridge.getKeyHandler();
-                handler.sendEscape();
-                terminal.bridge.tryKeyVibrate();
-                return true;
-            }
-        });
-
-        MenuItem symKey = menu.add("SYM");
-        symKey.setEnabled(activeTerminal);
-        symKey.setIcon(R.drawable.button_sym);
-        MenuItemCompat.setShowAsAction(symKey, MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        symKey.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                View flip = findCurrentView(R.id.console_flip);
-                if (flip == null) return false;
-
-                TerminalView terminal = (TerminalView)flip;
-
-                TerminalKeyListener handler = terminal.bridge.getKeyHandler();
-                handler.showCharPickerDialog(terminal);
-                return true;
-            }
-        });
-
-        MenuItem inputButton = menu.add("Input");
-        inputButton.setEnabled(activeTerminal);
-        inputButton.setIcon(R.drawable.button_input);
-        MenuItemCompat.setShowAsAction(inputButton, MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        inputButton.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                View flip = findCurrentView(R.id.console_flip);
-                if (flip == null)
-                    return false;
-
-                final TerminalView terminal = (TerminalView)flip;
-                Thread promptThread = new Thread(new Runnable() {
-                    public void run() {
-                        String inj = getCurrentPromptHelper().requestStringPrompt(null, "");
-                        terminal.bridge.injectString(inj);
-                    }
-                });
-                promptThread.setName("Prompt");
-                promptThread.setDaemon(true);
-                promptThread.start();
-                return true;
-            }
-        });
-
-        MenuItem keyboard = menu.add("Show Keyboard");
-        keyboard.setEnabled(activeTerminal);
-        keyboard.setIcon(R.drawable.button_keyboard);
-        MenuItemCompat.setShowAsAction(keyboard, MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        keyboard.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                View flip = findCurrentView(R.id.console_flip);
-                if (flip == null)
-                    return false;
-
-                inputManager.showSoftInput(flip, InputMethodManager.SHOW_FORCED);
-                return true;
-            }
-        });
-
-
         disconnect = menu.add(R.string.list_host_disconnect);
         if (hardKeyboard)
             disconnect.setAlphabeticShortcut('w');
@@ -777,6 +679,103 @@ public class ConsoleActivity extends Activity {
                         }
                     }).setNegativeButton(android.R.string.cancel, null).create().show();
 
+                return true;
+            }
+        });
+
+        MenuItem ctrlKey = menu.add("Ctrl");
+        ctrlKey.setEnabled(activeTerminal);
+        ctrlKey.setIcon(R.drawable.button_ctrl);
+        MenuItemCompat.setShowAsAction(ctrlKey, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        ctrlKey.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                View flip = findCurrentView(R.id.console_flip);
+                if (flip == null) return false;
+
+                TerminalView terminal = (TerminalView)flip;
+
+                TerminalKeyListener handler = terminal.bridge.getKeyHandler();
+                handler.metaPress(TerminalKeyListener.META_CTRL_ON);
+                terminal.bridge.tryKeyVibrate();
+                return true;
+            }
+        });
+
+        MenuItem escKey = menu.add("Esc");
+        escKey.setEnabled(activeTerminal);
+        escKey.setIcon(R.drawable.button_esc);
+        MenuItemCompat.setShowAsAction(escKey, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        escKey.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                View flip = findCurrentView(R.id.console_flip);
+                if (flip == null) return false;
+
+                TerminalView terminal = (TerminalView)flip;
+
+                TerminalKeyListener handler = terminal.bridge.getKeyHandler();
+                handler.sendEscape();
+                terminal.bridge.tryKeyVibrate();
+                return true;
+            }
+        });
+
+        MenuItem symKey = menu.add("SYM");
+        symKey.setEnabled(activeTerminal);
+        symKey.setIcon(R.drawable.button_sym);
+        MenuItemCompat.setShowAsAction(symKey, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        symKey.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                View flip = findCurrentView(R.id.console_flip);
+                if (flip == null) return false;
+
+                TerminalView terminal = (TerminalView)flip;
+
+                TerminalKeyListener handler = terminal.bridge.getKeyHandler();
+                handler.showCharPickerDialog(terminal);
+                return true;
+            }
+        });
+
+        MenuItem inputButton = menu.add("Input");
+        inputButton.setEnabled(activeTerminal);
+        inputButton.setIcon(R.drawable.button_input);
+        MenuItemCompat.setShowAsAction(inputButton, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        inputButton.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                View flip = findCurrentView(R.id.console_flip);
+                if (flip == null)
+                    return false;
+
+                final TerminalView terminal = (TerminalView)flip;
+                Thread promptThread = new Thread(new Runnable() {
+                    public void run() {
+                        String inj = getCurrentPromptHelper().requestStringPrompt(null, "");
+                        terminal.bridge.injectString(inj);
+                    }
+                });
+                promptThread.setName("Prompt");
+                promptThread.setDaemon(true);
+                promptThread.start();
+                return true;
+            }
+        });
+
+        MenuItem keyboard = menu.add("Show Keyboard");
+        keyboard.setEnabled(activeTerminal);
+        keyboard.setIcon(R.drawable.button_keyboard);
+        MenuItemCompat.setShowAsAction(keyboard, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        keyboard.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                View flip = findCurrentView(R.id.console_flip);
+                if (flip == null)
+                    return false;
+
+                inputManager.showSoftInput(flip, InputMethodManager.SHOW_FORCED);
                 return true;
             }
         });
