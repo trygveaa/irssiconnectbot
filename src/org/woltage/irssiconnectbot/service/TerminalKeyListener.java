@@ -90,7 +90,14 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
     private final TerminalBridge bridge;
     private final VDUBuffer buffer;
 
-    private String keymode = null;
+    private String camera;
+    private boolean delOnShiftBackspace;
+    private String desireZSkandinavianFixes;
+    private boolean dPadEscape;
+    private String keymode;
+    private String searchbutton;
+    private boolean xperiaProFixes;
+
     private boolean hardKeyboard = false;
 
     private int metaState = 0;
@@ -126,7 +133,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 
         hardKeyboard = hardKeyboard && !Build.MODEL.contains("Transformer");
 
-        updateKeymode();
+        updateSettings();
     }
 
     private static SparseArray<String> PICKER_SETS =
@@ -142,6 +149,10 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
      */
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         try {
+            // skip keys if we aren't connected yet or have been disconnected
+            if (bridge.isDisconnected() || bridge.transport == null)
+                return false;
+
             final boolean hardKeyboardHidden = manager.hardKeyboardHidden;
             // Ignore all key-up events except for the special keys
             if (event.getAction() == KeyEvent.ACTION_UP) {
@@ -149,11 +160,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                 if (!hardKeyboard || (hardKeyboard && hardKeyboardHidden))
                     return false;
 
-                // skip keys if we aren't connected yet or have been disconnected
-                if (bridge.isDisconnected() || bridge.transport == null)
-                    return false;
-
-                if (PreferenceConstants.KEYMODE_RIGHT.equals(keymode)) {
+                if (PreferenceConstants.KEYBOARDFIX_KEYMODE_RIGHT.equals(keymode)) {
                     if (keyCode == KeyEvent.KEYCODE_ALT_RIGHT
                             && (metaState & META_SLASH) != 0) {
                         metaState &= ~(META_SLASH | META_TRANSIENT);
@@ -165,7 +172,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                         bridge.transport.write(0x09);
                         return true;
                     }
-                } else if (PreferenceConstants.KEYMODE_LEFT.equals(keymode)) {
+                } else if (PreferenceConstants.KEYBOARDFIX_KEYMODE_LEFT.equals(keymode)) {
                     if (keyCode == KeyEvent.KEYCODE_ALT_LEFT
                             && (metaState & META_SLASH) != 0) {
                         metaState &= ~(META_SLASH | META_TRANSIENT);
@@ -190,10 +197,6 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                 bridge.decreaseFontSize();
                 return true;
             }
-
-            // skip keys if we aren't connected yet or have been disconnected
-            if (bridge.isDisconnected() || bridge.transport == null)
-                return false;
 
             bridge.resetScrollPosition();
 
@@ -243,6 +246,22 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
             if (uchar >= 0x20) {
                 metaState &= ~(META_SLASH | META_TAB);
 
+                // xperia Pro / Mini fixes -> map unused s and z keys to | and \
+                if (xperiaProFixes && (metaState & META_ALT_MASK) != 0) {
+                    if (keyCode == KeyEvent.KEYCODE_S) {
+                        bridge.transport.write('|');
+                        metaState &= ~META_TRANSIENT;
+                        bridge.redraw();
+                        return true;
+                    }
+                    if (keyCode == KeyEvent.KEYCODE_Z) {
+                        bridge.transport.write(0x5C);
+                        metaState &= ~META_TRANSIENT;
+                        bridge.redraw();
+                        return true;
+                    }
+                }
+
                 // Remove shift and alt modifiers
                 final int lastMetaState = metaState;
                 metaState &= ~(META_SHIFT_ON | META_ALT_ON);
@@ -267,8 +286,8 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                     bridge.transport.write(uchar);
                 } else {
 
-                    // HTC Desire Z fixes
-                    if(!prefs.getString("htcDesireZfix", "false").equals("false")) {
+                    // HTC Desire Z skandinavian fixes
+                    if (!desireZSkandinavianFixes.equals(PreferenceConstants.KEYBOARDFIX_DESIREZSKANDINAVIAN_OFF)) {
                         /*
                          * curMetaState == 0 normal mode
                          * curMetaState == 1 if shift key is pressed or locked
@@ -277,7 +296,8 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                          */
                         if(curMetaState == 0) {
                             // Desire Z "All fixes (Æ = Alt, Ø = Ctrl)"
-                            if(prefs.getString("htcDesireZfix", "false").equals("true")){ // Bind's Ø and ø to CTRL
+                            if (desireZSkandinavianFixes.equals(PreferenceConstants.KEYBOARDFIX_DESIREZSKANDINAVIAN_ALL)) {
+                                // Bind's Ø and ø to CTRL
                                 if(uchar == 0xd8 || uchar == 0xf8) {
                                     metaPress(META_CTRL_ON);
                                     bridge.redraw();
@@ -343,11 +363,11 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                 }
             }
 
-            // try handling keymode shortcuts
             if (hardKeyboard && !hardKeyboardHidden &&
                     event.getRepeatCount() == 0) {
 
-                if (PreferenceConstants.KEYMODE_RIGHT.equals(keymode)) {
+                // try handling keymode shortcuts
+                if (PreferenceConstants.KEYBOARDFIX_KEYMODE_RIGHT.equals(keymode)) {
                     switch (keyCode) {
                     case KeyEvent.KEYCODE_ALT_RIGHT:
                         metaState |= META_SLASH;
@@ -362,7 +382,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                         metaPress(META_ALT_ON);
                         return true;
                     }
-                } else if (PreferenceConstants.KEYMODE_LEFT.equals(keymode)) {
+                } else if (PreferenceConstants.KEYBOARDFIX_KEYMODE_LEFT.equals(keymode)) {
                     switch (keyCode) {
                     case KeyEvent.KEYCODE_ALT_LEFT:
                         metaState |= META_SLASH;
@@ -442,21 +462,20 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                 sendEscape();
                 return true;
             case KeyEvent.KEYCODE_SEARCH:
-                    if(prefs.getString("searchbutton", "urlscan").equals("tab")) {
-                        bridge.transport.write(0x09);
-                    } else if(prefs.getString("searchbutton", "urlscan").equals("meta")) {
+                if (PreferenceConstants.KEYBOARDFIX_SEARCH_BUTTON_TAB.equals(searchbutton)) {
+                    bridge.transport.write(0x09);
+                } else if (PreferenceConstants.KEYBOARDFIX_SEARCH_BUTTON_META.equals(searchbutton)) {
+                    sendEscape();
+                } else if (PreferenceConstants.KEYBOARDFIX_SEARCH_BUTTON_HARDMETA_SOFTURLSCAN.equals(searchbutton)) {
+                    if ((event.getFlags() & KeyEvent.FLAG_VIRTUAL_HARD_KEY) == 0) { // hardware key
                         sendEscape();
-                    } else if(prefs.getString("searchbutton", "urlscan").equals("hardmeta_softurlscan")) {
-                        if ((event.getFlags() & KeyEvent.FLAG_VIRTUAL_HARD_KEY) == 0) { // hardware key
-                            sendEscape();
-                        } else { // softkey
-                            urlScan(v);
-                        }
-                    } else {
+                    } else { // softkey
                         urlScan(v);
                     }
-
-                    return true;
+                } else {
+                    urlScan(v);
+                }
+                return true;
             case KeyEvent.KEYCODE_TAB:
                 bridge.transport.write(0x09);
                 return true;
@@ -485,9 +504,6 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
             case KeyEvent.KEYCODE_CAMERA:
             case KeyEvent.KEYCODE_FOCUS:
                 // check to see which shortcut the camera button triggers
-                String camera = manager.prefs.getString(
-                        PreferenceConstants.CAMERA,
-                        PreferenceConstants.CAMERA_CTRLA_SPACE);
                 if(PreferenceConstants.CAMERA_CTRLA_SPACE.equals(camera)) {
                     bridge.transport.write(0x01);
                     bridge.transport.write(' ');
@@ -504,13 +520,9 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 
             case KeyEvent.KEYCODE_DEL:
                 //Delete key and shift/caps+backspace or alt/capslock fix for Desire Z
-                if(!prefs.getString("htcDesireZfix", "false").equals("false")) {
-                    if( ((metaState & META_ALT_MASK) != 0) || ((metaState & META_SHIFT_MASK) != 0) ) {
-                        ((vt320) buffer).keyPressed(vt320.KEY_DELETE, ' ', getStateForBuffer());
-                    }else{
-                        ((vt320) buffer).keyPressed(vt320.KEY_BACK_SPACE, ' ', 0);
-                    }
-                }else {
+                if (delOnShiftBackspace && ( ((metaState & META_ALT_MASK) != 0) || ((metaState & META_SHIFT_MASK) != 0))) {
+                    ((vt320) buffer).keyPressed(vt320.KEY_DELETE, ' ', getStateForBuffer());
+                } else {
                     ((vt320) buffer).keyPressed(vt320.KEY_BACK_SPACE, ' ', getStateForBuffer());
                 }
                 metaState &= ~META_TRANSIENT;
@@ -566,33 +578,18 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                 return true;
             case KeyEvent.KEYCODE_DPAD_CENTER:
             case KeyEvent.KEYCODE_SWITCH_CHARSET:
-                if (keyCode == KeyEvent.KEYCODE_SWITCH_CHARSET && !prefs.getBoolean("xperiaProFix", false))
+                if (keyCode == KeyEvent.KEYCODE_SWITCH_CHARSET && !xperiaProFixes)
                     return true;
                 if ((metaState & META_CTRL_ON) != 0) {
-                    sendEscape();
+                    if (dPadEscape) {
+                        sendEscape();
+                    }
                     metaState &= ~META_CTRL_ON;
                 } else
                     metaPress(META_CTRL_ON);
                 bridge.redraw();
                 return true;
 
-            case KeyEvent.KEYCODE_S:
-                if(prefs.getBoolean("xperiaProFix", false)) {
-                    bridge.transport.write('|');
-                    metaState &= ~META_TRANSIENT;
-                    bridge.redraw();
-                    return true;
-                }
-                break;
-
-            case KeyEvent.KEYCODE_Z:
-                if(prefs.getBoolean("xperiaProFix", false)) {
-                    bridge.transport.write(0x5C);
-                    metaState &= ~META_TRANSIENT;
-                    bridge.redraw();
-                    return true;
-                }
-                break;
             }
 
         } catch (IOException e) {
@@ -719,14 +716,31 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
             String key) {
-        if (PreferenceConstants.KEYMODE.equals(key)) {
-            updateKeymode();
+        if (PreferenceConstants.KEYBOARDFIX_KEYMODE.equals(key)
+                || PreferenceConstants.KEYBOARDFIX_SEARCH_BUTTON.equals(key)
+                || PreferenceConstants.KEYBOARDFIX_DELBACKSPACE.equals(key)
+                || PreferenceConstants.KEYBOARDFIX_XPERIAPRO.equals(key)
+                || PreferenceConstants.CAMERA.equals(key)
+                || PreferenceConstants.KEYBOARDFIX_DESIREZSKANDINAVIAN.equals(key)
+                || PreferenceConstants.KEYBOARDFIX_DPAD_ESCAPE.equals(key)) {
+            updateSettings();
         }
     }
 
-    private void updateKeymode() {
-        keymode = prefs.getString(PreferenceConstants.KEYMODE, "");
+    private void updateSettings() {
+        keymode = prefs.getString(PreferenceConstants.KEYBOARDFIX_KEYMODE,
+                PreferenceConstants.KEYBOARDFIX_KEYMODE_DISABLED);
+        searchbutton = prefs.getString(PreferenceConstants.KEYBOARDFIX_SEARCH_BUTTON,
+                PreferenceConstants.KEYBOARDFIX_SEARCH_BUTTON_URLSCAN);
+        delOnShiftBackspace = prefs.getBoolean(PreferenceConstants.KEYBOARDFIX_DELBACKSPACE, false);
+        xperiaProFixes = prefs.getBoolean(PreferenceConstants.KEYBOARDFIX_XPERIAPRO, false);
+        camera = prefs.getString(PreferenceConstants.CAMERA,
+                PreferenceConstants.CAMERA_CTRLA_SPACE);
+        desireZSkandinavianFixes = prefs.getString(PreferenceConstants.KEYBOARDFIX_DESIREZSKANDINAVIAN,
+                PreferenceConstants.KEYBOARDFIX_DESIREZSKANDINAVIAN_OFF);
+        dPadEscape = prefs.getBoolean(PreferenceConstants.KEYBOARDFIX_DPAD_ESCAPE, false);
     }
+
 
     public void setCharset(String encoding) {
         this.encoding = encoding;

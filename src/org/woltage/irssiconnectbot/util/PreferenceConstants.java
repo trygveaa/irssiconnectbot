@@ -51,10 +51,23 @@ public class PreferenceConstants {
 
 	public static final String FULLSCREEN = "fullscreen";
 
-	public static final String KEYMODE = "keymode";
+	public static final String KEYBOARDFIX_KEYMODE = "keymode";
+	public static final String KEYBOARDFIX_KEYMODE_RIGHT = "Use right-side keys";
+	public static final String KEYBOARDFIX_KEYMODE_LEFT = "Use left-side keys";
+	public static final String KEYBOARDFIX_KEYMODE_DISABLED = "Disable";
+	public static final String KEYBOARDFIX_DELBACKSPACE = "deletebackspace";
+	public static final String KEYBOARDFIX_SEARCH_BUTTON = "searchbutton";
+	public static final String KEYBOARDFIX_SEARCH_BUTTON_TAB = "tab";
+	public static final String KEYBOARDFIX_SEARCH_BUTTON_META = "meta";
+	public static final String KEYBOARDFIX_SEARCH_BUTTON_URLSCAN = "urlscan";
+	public static final String KEYBOARDFIX_SEARCH_BUTTON_HARDMETA_SOFTURLSCAN = "hardmeta_softurlscan";
+	public static final String KEYBOARDFIX_XPERIAPRO = "xperiaProFix";
+	public static final String KEYBOARDFIX_DESIREZSKANDINAVIAN = "htcDesireZfix";
+	public static final String KEYBOARDFIX_DESIREZSKANDINAVIAN_OFF = "false";
+	public static final String KEYBOARDFIX_DESIREZSKANDINAVIAN_ON = "only_scandinavian_keys";
+	public static final String KEYBOARDFIX_DESIREZSKANDINAVIAN_ALL = "true";
+	public static final String KEYBOARDFIX_DPAD_ESCAPE = "dpadescape";
 
-	public static final String KEYMODE_RIGHT = "Use right-side keys";
-	public static final String KEYMODE_LEFT = "Use left-side keys";
 
 	public static final String CAMERA = "camera";
 

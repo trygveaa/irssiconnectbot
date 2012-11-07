@@ -231,12 +231,23 @@
 	<!-- Brief summary of the feature that is enabled when the checkbox preference for the receive notifications on terminal bell feature is checked -->
 	<string name="pref_bell_notification_summary">"Send notification when a terminal running in the background sounds a bell."</string>
 
+	<!-- Category title for the Input preferences -->
+	<string name="pref_input_category">"Input Settings"</string>
+
 	<!-- Preference selection to indicate use of right side of keyboard for special shortcuts. -->
 	<string name="list_keymode_right">"Use right-side keys"</string>
 	<!-- Preference selection to indicate use of left side of keyboard for special shortcuts. -->
 	<string name="list_keymode_left">"Use left-side keys"</string>
 	<!-- Preference selection to indicate never to use special shortcut keys. -->
 	<string name="list_keymode_none">"Disable"</string>
+
+	<!-- alt-backspace to del -->
+	<string name="pref_deletebackspace_title">"FN + Backspace = DEL"</string>
+	<string name="pref_deletebackspace_summary">"Send DEL instead of Backspace when a modifier key is pressed."</string>
+
+	<!-- escape on 2x dpad -->
+	<string name="pref_dpadescape_title">"2x DPAD = ESC"</string>
+	<string name="pref_dpadescape_summary">"Send ESC when pressing jogball/dpad twice. Useful for hard keyboards that don't have an escape key, but a jogball/dpad."</string>
 
 	<!-- Preference to not use pubkeys to authenticate to this host. -->
 	<string name="list_pubkeyids_none">"Do not use keys"</string>

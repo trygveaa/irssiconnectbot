@@ -175,38 +175,42 @@
 		<CheckBoxPreference android:key="bellNotificationSound" android:summary="@string/pref_bell_notification_sound_summary" android:title="@string/pref_bell_notification_sound_title"/>
 
 	</PreferenceCategory>
-	<ListPreference
-		android:key="swipe"
-		android:title="@string/pref_swipe_title"
-		android:entries="@array/list_swipe_select"
-		android:entryValues="@array/list_swipe_select_values"
-		android:summary="@string/pref_swipe_summary"
-		android:defaultValue="channel_swipe_inverted"
-		/>
-	
-	<CheckBoxPreference
-		android:key="longPressMenu"
-		android:title="@string/pref_longpressmenu_title"
-		android:summary="@string/pref_longpressmenu_summary"
-		android:defaultValue="true"
-		/>
-		
-	<CheckBoxPreference
-		android:key="onScreenButtons"
-		android:title="@string/pref_onscreenbuttons_title"
-		android:summary="@string/pref_onscreenbuttons_summary"
-		android:defaultValue="true"
-		/>
 
-	<ListPreference
-		android:title="@string/pref_htcdesirez_title"
-		android:summary="@string/pref_htcdesirez_summary"
-		android:entries="@array/list_desirez_fixes"
-		android:entryValues="@array/list_desirez_fixes_values"
-		android:defaultValue="false"
-		android:key="htcDesireZfix"/>
+	<PreferenceCategory
+		android:title="@string/pref_input_category">
 
-    <ListPreference
+	    <ListPreference
+			android:key="swipe"
+			android:title="@string/pref_swipe_title"
+			android:entries="@array/list_swipe_select"
+			android:entryValues="@array/list_swipe_select_values"
+			android:summary="@string/pref_swipe_summary"
+			android:defaultValue="channel_swipe_inverted"
+			/>
+
+		<CheckBoxPreference
+			android:key="longPressMenu"
+			android:title="@string/pref_longpressmenu_title"
+			android:summary="@string/pref_longpressmenu_summary"
+			android:defaultValue="true"
+			/>
+
+		<CheckBoxPreference
+			android:key="onScreenButtons"
+			android:title="@string/pref_onscreenbuttons_title"
+			android:summary="@string/pref_onscreenbuttons_summary"
+			android:defaultValue="true"
+			/>
+
+		<ListPreference
+			android:title="@string/pref_htcdesirez_title"
+			android:summary="@string/pref_htcdesirez_summary"
+			android:entries="@array/list_desirez_fixes"
+			android:entryValues="@array/list_desirez_fixes_values"
+			android:defaultValue="false"
+			android:key="htcDesireZfix"/>
+
+	    <ListPreference
     		android:key="searchbutton"
     		android:title="@string/pref_searchbutton"
     		android:entries="@array/list_searchbutton"
@@ -214,12 +218,28 @@
     		android:summary="@string/pref_searchbutton_summary"
     		android:defaultValue="urlscan"
     		/>
-	<CheckBoxPreference
-		android:key="xperiaProFix"
-		android:title="@string/pref_xperiapro_title"
-		android:summary="@string/pref_xperiapro_summary"
-		android:defaultValue="false"
-		/>
+
+	    <CheckBoxPreference
+			android:key="xperiaProFix"
+			android:title="@string/pref_xperiapro_title"
+			android:summary="@string/pref_xperiapro_summary"
+			android:defaultValue="false"
+			/>
+
+		<CheckBoxPreference
+			android:key="deletebackspace"
+			android:title="@string/pref_deletebackspace_title"
+			android:summary="@string/pref_deletebackspace_summary"
+			android:defaultValue="false"
+			/>
+
+		<CheckBoxPreference
+			android:key="dpadescape"
+			android:title="@string/pref_dpadescape_title"
+			android:summary="@string/pref_dpadescape_summary"
+			android:defaultValue="false"
+			/>
+	</PreferenceCategory>
 		
 	<PreferenceCategory
 		android:title="@string/pref_default_fsize_category">
