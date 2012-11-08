@@ -249,6 +249,10 @@
 	<string name="pref_dpadescape_title">"2x DPAD = ESC"</string>
 	<string name="pref_dpadescape_summary">"Send ESC when pressing jogball/dpad twice. Useful for hard keyboards that don't have an escape key, but a jogball/dpad."</string>
 
+	<!-- f keys using shift + 1-9 -->
+	<string name="pref_shiftfkeys_title">"F-Keys on Shift + 1–9"</string>
+	<string name="pref_shiftfkeys_summary">"Send function keys when pressing Shift + 1–9 on a hardware keyboard."</string>
+
 	<!-- Preference to not use pubkeys to authenticate to this host. -->
 	<string name="list_pubkeyids_none">"Do not use keys"</string>
 	<!-- Preference to use any pubkey to authenticate to this host. -->

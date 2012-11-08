@@ -67,6 +67,7 @@ public class PreferenceConstants {
 	public static final String KEYBOARDFIX_DESIREZSKANDINAVIAN_ON = "only_scandinavian_keys";
 	public static final String KEYBOARDFIX_DESIREZSKANDINAVIAN_ALL = "true";
 	public static final String KEYBOARDFIX_DPAD_ESCAPE = "dpadescape";
+	public static final String KEYBOARDFIX_SHIFT_FKEYS = "shiftfkeys";
 
 
 	public static final String CAMERA = "camera";

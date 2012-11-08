@@ -94,6 +94,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
     private boolean delOnShiftBackspace;
     private String desireZSkandinavianFixes;
     private boolean dPadEscape;
+    private boolean fKeysUsingShiftNumbers;
     private String keymode;
     private String searchbutton;
     private boolean xperiaProFixes;
@@ -276,10 +277,18 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                     // If there is no hard keyboard or there is a hard keyboard currently hidden,
                     // CTRL-1 through CTRL-9 will send F1 through F9
                     if ((!hardKeyboard || (hardKeyboard && hardKeyboardHidden))
-                            && sendFunctionKey(keyCode))
+                            && sendFunctionKey(key))
                         return true;
 
                     uchar = keyAsControl(uchar);
+                }
+
+                // if enabled, handle pressing f-keys using shift
+                if ((hardKeyboard && !hardKeyboardHidden)
+                        && fKeysUsingShiftNumbers
+                        && (curMetaState & KeyEvent.META_SHIFT_ON) != 0
+                        && sendFunctionKey(uchar)) {
+                    return true;
                 }
 
                 if (uchar < 0x80) {
@@ -350,7 +359,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                         if (k != k0)
                             sendCtrl = true;
                         // send F1-F10 via CTRL-1 through CTRL-0
-                        if (!sendCtrl && sendFunctionKey(keyCode))
+                        if (!sendCtrl && sendFunctionKey(k0))
                             return true;
                     } else if ((orgMetaState & KeyEvent.META_ALT_ON) != 0) {
                         sendMeta = true;
@@ -629,44 +638,18 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
     }
 
     /**
+     * Send Function Keys F10,F1-F9, if parameter is the ASCII code '0'-'9'
+     *
      * @param key
-     * @return successful
+     *         The ASCII code of the key, NOT the android KeyCode
+     * @return {@code true} if the parameter was 0-9 and a function key was sent, {@code false} otherwise.
      */
-    private boolean sendFunctionKey(int keyCode) {
-        switch (keyCode) {
-        case KeyEvent.KEYCODE_1:
-            ((vt320) buffer).keyPressed(vt320.KEY_F1, ' ', 0);
+    private boolean sendFunctionKey(int key) {
+        if (key >= '0' && key <= '9') {
+            ((vt320) buffer).keyPressed(vt320.KEY_F1 + (key == '0' ? 9 : key - '1'), ' ', 0);
             return true;
-        case KeyEvent.KEYCODE_2:
-            ((vt320) buffer).keyPressed(vt320.KEY_F2, ' ', 0);
-            return true;
-        case KeyEvent.KEYCODE_3:
-            ((vt320) buffer).keyPressed(vt320.KEY_F3, ' ', 0);
-            return true;
-        case KeyEvent.KEYCODE_4:
-            ((vt320) buffer).keyPressed(vt320.KEY_F4, ' ', 0);
-            return true;
-        case KeyEvent.KEYCODE_5:
-            ((vt320) buffer).keyPressed(vt320.KEY_F5, ' ', 0);
-            return true;
-        case KeyEvent.KEYCODE_6:
-            ((vt320) buffer).keyPressed(vt320.KEY_F6, ' ', 0);
-            return true;
-        case KeyEvent.KEYCODE_7:
-            ((vt320) buffer).keyPressed(vt320.KEY_F7, ' ', 0);
-            return true;
-        case KeyEvent.KEYCODE_8:
-            ((vt320) buffer).keyPressed(vt320.KEY_F8, ' ', 0);
-            return true;
-        case KeyEvent.KEYCODE_9:
-            ((vt320) buffer).keyPressed(vt320.KEY_F9, ' ', 0);
-            return true;
-        case KeyEvent.KEYCODE_0:
-            ((vt320) buffer).keyPressed(vt320.KEY_F10, ' ', 0);
-            return true;
-        default:
-            return false;
         }
+        return false;
     }
 
     /**
@@ -722,6 +705,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                 || PreferenceConstants.KEYBOARDFIX_XPERIAPRO.equals(key)
                 || PreferenceConstants.CAMERA.equals(key)
                 || PreferenceConstants.KEYBOARDFIX_DESIREZSKANDINAVIAN.equals(key)
+                || PreferenceConstants.KEYBOARDFIX_SHIFT_FKEYS.equals(key)
                 || PreferenceConstants.KEYBOARDFIX_DPAD_ESCAPE.equals(key)) {
             updateSettings();
         }
@@ -739,6 +723,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
         desireZSkandinavianFixes = prefs.getString(PreferenceConstants.KEYBOARDFIX_DESIREZSKANDINAVIAN,
                 PreferenceConstants.KEYBOARDFIX_DESIREZSKANDINAVIAN_OFF);
         dPadEscape = prefs.getBoolean(PreferenceConstants.KEYBOARDFIX_DPAD_ESCAPE, false);
+        fKeysUsingShiftNumbers = prefs.getBoolean(PreferenceConstants.KEYBOARDFIX_SHIFT_FKEYS, false);
     }
 
 
