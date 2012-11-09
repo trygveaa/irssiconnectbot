@@ -41,7 +41,7 @@ import com.google.ase.Exec;
  */
 public class Local extends AbsTransport {
 	private static final String TAG = "ConnectBot.Local";
-	private static final String PROTOCOL = "local";
+	public static final String PROTOCOL = "local";
 
 	private static final String DEFAULT_URI = "local:#Local";
 

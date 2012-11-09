@@ -112,6 +112,7 @@
 		/>
 
 	<PreferenceCategory
+	    android:key="category_connection"
 		android:title="@string/hostpref_connection_category">
 		
 		<EditTextPreference

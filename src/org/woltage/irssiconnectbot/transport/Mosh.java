@@ -57,7 +57,7 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
 	private FileInputStream is;
 	private FileOutputStream os;
 
-	private static final String PROTOCOL = "mosh";
+	public static final String PROTOCOL = "mosh";
 	private static final String TAG = "ConnectBot.MOSH";
 	private static final int DEFAULT_PORT = 22;
 

@@ -23,12 +23,15 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.woltage.irssiconnectbot.bean.HostBean;
 import org.woltage.irssiconnectbot.service.TerminalBridge;
 import org.woltage.irssiconnectbot.service.TerminalManager;
+import org.woltage.irssiconnectbot.transport.Local;
+import org.woltage.irssiconnectbot.transport.Mosh;
+import org.woltage.irssiconnectbot.transport.SSH;
 import org.woltage.irssiconnectbot.util.HostDatabase;
 import org.woltage.irssiconnectbot.util.PubkeyDatabase;
 
@@ -47,6 +50,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 import android.util.Log;
 
 public class HostEditorActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
@@ -298,6 +302,7 @@ public class HostEditorActivity extends PreferenceActivity implements OnSharedPr
 		}
 
 		this.updateSummaries();
+		this.removeIrrelevantPrefs();
 	}
 
 	@Override
@@ -362,6 +367,39 @@ public class HostEditorActivity extends PreferenceActivity implements OnSharedPr
 			pref.setSummary(value);
 		}
 
+	}
+
+	private void removeIrrelevantPrefs() {
+		String prot = host.getProtocol();
+
+		final String PREF_CAT_CONNECTION = "category_connection";
+
+		if (!prot.equals(Mosh.PROTOCOL)) {
+			removePref(HostDatabase.FIELD_HOST_MOSHPORT);
+			removePref(HostDatabase.FIELD_HOST_LOCALE);
+		}
+		if (!prot.equals(Mosh.PROTOCOL) && !prot.equals(SSH.PROTOCOL)) {
+			removePref(HostDatabase.FIELD_HOST_COMPRESSION);
+			removePref(PREF_CAT_CONNECTION, HostDatabase.FIELD_HOST_USERNAME);
+			removePref(HostDatabase.FIELD_HOST_PUBKEYID);
+			removePref(HostDatabase.FIELD_HOST_USEAUTHAGENT);
+		}
+		if (!prot.equals(SSH.PROTOCOL)) {
+			removePref(HostDatabase.FIELD_HOST_WANTSESSION);
+		}
+		if (prot.equals(Local.PROTOCOL)) {
+			removePref(HostDatabase.FIELD_HOST_STAYCONNECTED);
+			removePref(PREF_CAT_CONNECTION);
+		}
+	}
+
+	private void removePref(String pref) {
+		getPreferenceScreen().removePreference(findPreference(pref));
+	}
+
+	private void removePref(String cat, String pref) {
+		((PreferenceCategory) getPreferenceScreen().findPreference(cat))
+				.removePreference(findPreference(pref));
 	}
 
 	private void initCharsetPref(final ListPreference charsetPref) {
