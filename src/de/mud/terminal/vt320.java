@@ -223,8 +223,8 @@ public void setScreenSize(int c, int r, boolean broadcast) {
     Remove[0] = Remove[1] = Remove[2] = Remove[3] = "\u001b[3~";
     PrevScn[0] = PrevScn[1] = PrevScn[2] = PrevScn[3] = "\u001b[5~";
     NextScn[0] = NextScn[1] = NextScn[2] = NextScn[3] = "\u001b[6~";
-    KeyHome[0] = KeyHome[1] = KeyHome[2] = KeyHome[3] = "\u001b[H";
-    KeyEnd[0] = KeyEnd[1] = KeyEnd[2] = KeyEnd[3] = "\u001b[F";
+    KeyHome[0] = KeyHome[1] = KeyHome[2] = KeyHome[3] = "\u001b[1~";
+    KeyEnd[0] = KeyEnd[1] = KeyEnd[2] = KeyEnd[3] = "\u001b[4~";
     Escape[0] = Escape[1] = Escape[2] = Escape[3] = "\u001b";
     if (vms) {
       BackSpace[1] = "" + (char) 10;	//  VMS shift deletes word back
@@ -240,8 +240,6 @@ public void setScreenSize(int c, int r, boolean broadcast) {
     }
 
     /* some more VT100 keys */
-    Find = "\u001b[1~";
-    Select = "\u001b[4~";
     Help = "\u001b[28~";
     Do = "\u001b[29~";
 
@@ -278,8 +276,6 @@ public void setScreenSize(int c, int r, boolean broadcast) {
       FunctionKeyAlt[i] = "";
       FunctionKeyCtrl[i] = "";
     }
-    FunctionKeyShift[15] = Find;
-    FunctionKeyShift[16] = Select;
 
 
     TabKey[0] = "\u0009";
