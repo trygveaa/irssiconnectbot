@@ -277,7 +277,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
                     // If there is no hard keyboard or there is a hard keyboard currently hidden,
                     // CTRL-1 through CTRL-9 will send F1 through F9
                     if ((!hardKeyboard || (hardKeyboard && hardKeyboardHidden))
-                            && sendFunctionKey(key))
+                            && sendFunctionKey(uchar))
                         return true;
 
                     uchar = keyAsControl(uchar);
