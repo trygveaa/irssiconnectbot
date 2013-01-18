@@ -377,6 +377,7 @@ public class HostEditorActivity extends PreferenceActivity implements OnSharedPr
 		if (!prot.equals(Mosh.PROTOCOL)) {
 			removePref(HostDatabase.FIELD_HOST_MOSHPORT);
 			removePref(HostDatabase.FIELD_HOST_LOCALE);
+                        removePref(HostDatabase.FIELD_HOST_MOSH_SERVER);
 		}
 		if (!prot.equals(Mosh.PROTOCOL) && !prot.equals(SSH.PROTOCOL)) {
 			removePref(HostDatabase.FIELD_HOST_COMPRESSION);

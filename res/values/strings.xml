@@ -315,6 +315,11 @@
 	<!-- mosh port preference summary -->
 	<string name="hostpref_moshport_summary">"Port to request mosh-server use, or 0 for automatic"</string>
 
+	<!-- mosh server preference title -->
+	<string name="hostpref_moshserver_title">"Requested Mosh Server"</string>
+	<!-- mosh server preference summary -->
+	<string name="hostpref_moshserver_summary">"Path to mosh-server on the remote host"</string>
+
 	<!-- locale preference title -->
 	<string name="hostpref_locale_title">"Locale to send to server"</string>
 	<!-- locale preference summary -->

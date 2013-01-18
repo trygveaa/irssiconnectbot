@@ -51,6 +51,7 @@ public class HostBean extends AbstractBean {
 	private String encoding = HostDatabase.ENCODING_DEFAULT;
 	private boolean stayConnected = false;
         private int moshPort = -1;
+        private String moshServer = null;
         private String locale = HostDatabase.LOCALE_DEFAULT;
 
 	public HostBean() {
@@ -211,6 +212,13 @@ public class HostBean extends AbstractBean {
             return moshPort;
         }
 
+        public void setMoshServer(String moshServer) {
+            this.moshServer = moshServer;
+        }
+        public String getMoshServer() {
+            return moshServer;
+        }
+
         public void setLocale(String locale) {
             this.locale = locale;
         }
@@ -251,6 +259,7 @@ public class HostBean extends AbstractBean {
 		values.put(HostDatabase.FIELD_HOST_ENCODING, encoding);
 		values.put(HostDatabase.FIELD_HOST_STAYCONNECTED, stayConnected);
                 values.put(HostDatabase.FIELD_HOST_MOSHPORT, moshPort);
+                values.put(HostDatabase.FIELD_HOST_MOSH_SERVER, moshServer);
                 values.put(HostDatabase.FIELD_HOST_LOCALE, locale);
 
 		return values;
@@ -294,6 +303,9 @@ public class HostBean extends AbstractBean {
 			return false;
 
                 if (moshPort != host.getMoshPort())
+                    return false;
+
+                if (moshServer != host.getMoshServer())
                     return false;
 
                 if (locale != host.getLocale())

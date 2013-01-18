@@ -106,6 +106,12 @@
 		/>
 
 	<EditTextPreference
+		android:key="moshserver"
+		android:title="@string/hostpref_moshserver_title"
+		android:summary="@string/hostpref_moshserver_summary"
+		/>
+
+	<EditTextPreference
 		android:key="locale"
 		android:title="@string/hostpref_locale_title"
 		android:summary="@string/hostpref_locale_summary"

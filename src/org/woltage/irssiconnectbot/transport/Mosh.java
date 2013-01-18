@@ -160,8 +160,11 @@ public class Mosh extends SSH implements ConnectionMonitor, InteractiveCallback,
                             bridge.outputLine("ssh rejected our LANG environment variable: "+e.getMessage());
                         }
 
-                        String serverCommand = "mosh-server new -s";
-                        serverCommand += " -l LANG="+host.getLocale();
+                        String serverCommand = host.getMoshServer();
+                        if(serverCommand == null) {
+                            serverCommand = "mosh-server";
+                        }
+                        serverCommand += " new -s -l LANG="+host.getLocale();
                         if(host.getMoshPort() > 0) {
                             serverCommand += " -p "+host.getMoshPort();
                         }

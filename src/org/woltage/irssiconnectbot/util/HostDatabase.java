@@ -47,7 +47,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 	public final static String TAG = "ConnectBot.HostDatabase";
 
 	public final static String DB_NAME = "hosts";
-	public final static int DB_VERSION = 24;
+	public final static int DB_VERSION = 25;
 
 	public final static String TABLE_HOSTS = "hosts";
 	public final static String FIELD_HOST_NICKNAME = "nickname";
@@ -70,6 +70,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 	public final static String FIELD_HOST_ENCODING = "encoding";
 	public final static String FIELD_HOST_STAYCONNECTED = "stayconnected";
         public final static String FIELD_HOST_MOSHPORT = "moshport";
+        public final static String FIELD_HOST_MOSH_SERVER = "moshserver";
         public final static String FIELD_HOST_LOCALE = "locale";
 
 	public final static String TABLE_PORTFORWARDS = "portforwards";
@@ -112,6 +113,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 
 	public final static String ENCODING_DEFAULT = Charset.defaultCharset().name();
         public final static String LOCALE_DEFAULT = "en_US.UTF-8";
+        public final static String MOSH_SERVER_DEFAULT = "mosh-server";
 
 	public final static long PUBKEYID_NEVER = -2;
 	public final static long PUBKEYID_ANY = -1;
@@ -176,6 +178,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 				+ FIELD_HOST_STAYCONNECTED + " TEXT, "
                                 + FIELD_HOST_MOSHPORT + " INTEGER DEFAULT 0, "
                                 + FIELD_HOST_LOCALE + " TEXT DEFAULT '" + LOCALE_DEFAULT + "' "
+                                + FIELD_HOST_MOSH_SERVER + " TEXT DEFAULT '" + MOSH_SERVER_DEFAULT + "', "
                                 + ")");
 
 		db.execSQL("CREATE TABLE " + TABLE_PORTFORWARDS
@@ -275,6 +278,9 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 		case 23:
 			db.execSQL("ALTER TABLE " + TABLE_PORTFORWARDS
 					+ " ADD COLUMN " + FIELD_PORTFORWARD_BINDADDR + " TEXT");
+                case 24:
+                        db.execSQL("ALTER TABLE " + TABLE_HOSTS
+                                + " ADD COLUMN " + FIELD_HOST_MOSH_SERVER + " TEXT DEFAULT '" + MOSH_SERVER_DEFAULT + "'");
 		}
 	}
 
@@ -400,6 +406,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 			COL_ENCODING = c.getColumnIndexOrThrow(FIELD_HOST_ENCODING),
 			COL_STAYCONNECTED = c.getColumnIndexOrThrow(FIELD_HOST_STAYCONNECTED),
                         COL_MOSHPORT = c.getColumnIndexOrThrow(FIELD_HOST_MOSHPORT),
+                        COL_MOSH_SERVER = c.getColumnIndexOrThrow(FIELD_HOST_MOSH_SERVER),
                         COL_LOCALE = c.getColumnIndexOrThrow(FIELD_HOST_LOCALE);
 
 
@@ -425,6 +432,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 			host.setEncoding(c.getString(COL_ENCODING));
 			host.setStayConnected(Boolean.valueOf(c.getString(COL_STAYCONNECTED)));
                         host.setMoshPort(c.getInt(COL_MOSHPORT));
+                        host.setMoshServer(c.getString(COL_MOSH_SERVER));
                         host.setLocale(c.getString(COL_LOCALE));
 
 			hosts.add(host);
