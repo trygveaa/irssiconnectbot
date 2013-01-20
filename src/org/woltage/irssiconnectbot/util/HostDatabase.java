@@ -177,8 +177,8 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 				+ FIELD_HOST_ENCODING + " TEXT DEFAULT '" + ENCODING_DEFAULT + "', "
 				+ FIELD_HOST_STAYCONNECTED + " TEXT, "
                                 + FIELD_HOST_MOSHPORT + " INTEGER DEFAULT 0, "
-                                + FIELD_HOST_LOCALE + " TEXT DEFAULT '" + LOCALE_DEFAULT + "' "
-                                + FIELD_HOST_MOSH_SERVER + " TEXT DEFAULT '" + MOSH_SERVER_DEFAULT + "', "
+                                + FIELD_HOST_LOCALE + " TEXT DEFAULT '" + LOCALE_DEFAULT + "', "
+                                + FIELD_HOST_MOSH_SERVER + " TEXT DEFAULT '" + MOSH_SERVER_DEFAULT + "' "
                                 + ")");
 
 		db.execSQL("CREATE TABLE " + TABLE_PORTFORWARDS
