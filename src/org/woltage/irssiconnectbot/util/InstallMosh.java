@@ -116,11 +116,20 @@ public final class InstallMosh implements Runnable {
     }
 
     public boolean install() {
-        if(!bindir.exists()) {
-            if(!bindir.mkdir()) {
-                installMessage.append("mkdir bin failed\r\n");
+        if(!data_dir.exists()) {
+            if(!data_dir.mkdir()) {
+                installMessage.append("mkdir "+data_dir.getPath()+" failed\r\n");
                 return false;
             }
+            installMessage.append("mkdir "+data_dir.getPath()+": done\r\n");
+        }
+
+        if(!bindir.exists()) {
+            if(!bindir.mkdir()) {
+                installMessage.append("mkdir "+bindir.getPath()+" failed\r\n");
+                return false;
+            }
+            installMessage.append("mkdir "+bindir.getPath()+": done\r\n");
         }
 
         if(!installBusybox())
