@@ -1233,7 +1233,7 @@ public class ConsoleActivity extends Activity {
             String openSSHPubkey = PubkeyUtils.convertToOpenSSHFormat(pk, pubkey.getNickname());
 
             final TerminalView terminal = (TerminalView) findCurrentView(R.id.console_flip);
-            terminal.bridge.injectString("mkdir .ssh -pm 700 ; echo " + openSSHPubkey + " >> ~/.ssh/authorized_keys");
+            terminal.bridge.injectString("mkdir ~/.ssh -pm 700 ; echo " + openSSHPubkey + " >> ~/.ssh/authorized_keys");
         } catch (InvalidKeyException e) {
             Log.e(TAG, e.getMessage(), e);
         } catch (IOException e) {
