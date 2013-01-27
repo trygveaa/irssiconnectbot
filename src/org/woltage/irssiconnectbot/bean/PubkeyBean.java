@@ -113,6 +113,9 @@ public class PubkeyBean extends AbstractBean {
 	}
 
 	public void setPublicKey(byte[] encoded) {
+                if(encoded == null) {
+                        return;
+                }
 		final X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encoded);
 		if (type != null) {
 			publicKey = decodePublicKeyAs(pubKeySpec, type);
@@ -190,6 +193,8 @@ public class PubkeyBean extends AbstractBean {
 			sb.append("-bit");
 		} else if (publicKey instanceof DSAPublicKey) {
 			sb.append("DSA 1024-bit");
+                } else if (publicKey == null) {
+                        sb.append("No public key");
 		} else {
 			sb.append("Unknown Key Type");
 		}
@@ -210,7 +215,9 @@ public class PubkeyBean extends AbstractBean {
 		values.put(PubkeyDatabase.FIELD_PUBKEY_NICKNAME, nickname);
 		values.put(PubkeyDatabase.FIELD_PUBKEY_TYPE, type);
 		values.put(PubkeyDatabase.FIELD_PUBKEY_PRIVATE, privateKey);
-		values.put(PubkeyDatabase.FIELD_PUBKEY_PUBLIC, publicKey.getEncoded());
+		if(publicKey != null) {
+		        values.put(PubkeyDatabase.FIELD_PUBKEY_PUBLIC, publicKey.getEncoded());
+		}
 		values.put(PubkeyDatabase.FIELD_PUBKEY_ENCRYPTED, encrypted ? 1 : 0);
 		values.put(PubkeyDatabase.FIELD_PUBKEY_STARTUP, startup ? 1 : 0);
 		values.put(PubkeyDatabase.FIELD_PUBKEY_CONFIRMUSE, confirmUse ? 1 : 0);
