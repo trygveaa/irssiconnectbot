@@ -1023,7 +1023,7 @@ public class ConsoleActivity extends Activity {
 
     protected void shiftCurrentTerminalOrIrssiWindow(final int direction, boolean upperScreenHalf) {
         if (upperScreenHalf || prefs.getString("swipe", "").equals("default")) {
-            shiftCurrentTerminal(direction);
+            shiftScreenWindow(direction);
         } else {
             shiftIrssiWindow(direction);
         }
@@ -1089,6 +1089,35 @@ public class ConsoleActivity extends Activity {
                 ((vt320)terminal.bridge.buffer).write(0x0E);
             } else if (keyCode == vt320.KEY_LEFT) {
                 ((vt320)terminal.bridge.buffer).write(0x10);
+            }
+            terminal.bridge.tryKeyVibrate();
+            terminal.bridge.tryScrollVibrate();
+    }
+
+    protected void shiftScreenWindow(final int direction) {
+            int keyCode = 0;
+            View flip = findCurrentView(R.id.console_flip);
+            if(flip == null) return;
+            TerminalView terminal = (TerminalView)flip;
+
+            if(direction == SHIFT_LEFT) {
+                if(prefs.getString("swipe", "").equals("channel_swipe_inverted")) {
+                    keyCode = vt320.KEY_RIGHT;
+                } else {
+                    keyCode = vt320.KEY_LEFT;
+                }
+            } else if(direction == SHIFT_RIGHT) {
+                if(prefs.getString("swipe", "").equals("channel_swipe_inverted")) {
+                    keyCode = vt320.KEY_LEFT;
+                } else {
+                    keyCode = vt320.KEY_RIGHT;
+                }
+            }
+
+            if(keyCode == vt320.KEY_RIGHT) {
+                ((vt320)terminal.bridge.buffer).write(new byte[]{0x01, 0x00});
+            } else if (keyCode == vt320.KEY_LEFT) {
+                ((vt320)terminal.bridge.buffer).write(new byte[]{0x01, 0x08});
             }
             terminal.bridge.tryKeyVibrate();
             terminal.bridge.tryScrollVibrate();
